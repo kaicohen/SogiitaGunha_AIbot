@@ -2956,9 +2956,11 @@ triggerall=var(58)!=5
 triggerall=enemy(var(0)),prevstateno!=5120&&helper(21000),var(10)<=0
 triggerall=numhelper(30000)
 triggerall=helper(30000),sysvar(3)!=[2,3]
-triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=0&&random<700||helper(30000),sysvar(3)=1||helper(30000),sysvar(3)=4&&random<700||enemy(var(0)),hitdefattr=sca,ap
-triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=1||helper(30000),sysvar(4)=0&&(enemy(var(0)),numhelper>helper(21000),var(2))
-trigger1=ctrl||((stateno=[120,155])&&movetype!=h)
+;triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=0&&random<700||helper(30000),sysvar(3)=1||helper(30000),sysvar(3)=4&&random<700||enemy(var(0)),hitdefattr=sca,ap
+;triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=1||helper(30000),sysvar(4)=0&&(enemy(var(0)),numhelper>helper(21000),var(2))
+triggerall=helper(30000),sysvar(3)=0&&random<700||helper(30000),sysvar(3)=1||helper(30000),sysvar(3)=4&&random<700||enemy(var(0)),hitdefattr=sca,ap
+triggerall=helper(30000),sysvar(3)=1||helper(30000),sysvar(4)=0&&(enemy(var(0)),numhelper>helper(21000),var(2))
+trigger1=0;ctrl||((stateno=[120,155])&&movetype!=h)
 trigger1=p2statetype!=a&&p2movetype=a&&enemy(var(0)),animtime>-4
 trigger1=numhelper(21000)
 trigger1=(enemy(var(0)),numproj=[1,2])||(((enemy(var(0)),numhelper-helper(21000),var(2))=[1,2])&&var(59)<=3)||enemy(var(0)),hitdefattr=sca,ap
@@ -2966,7 +2968,7 @@ trigger1=var(56)&&helper(21000),var(1)
 trigger1=helper(21000),var(4)=0
 trigger1=random<var(59)*100+50
 trigger1=(var(59)=[2,3])||var(59)=4&&random<100||(var(59)=[4,5])&&helper(30000),sysvar(4)=0&&((enemy(var(0)),numproj=[1,2])||enemy(var(0)),hitdefattr=sca,ap)
-trigger2=ctrl||((stateno=[120,155])&&movetype!=h)
+trigger2=0;ctrl||((stateno=[120,155])&&movetype!=h)
 trigger2=numhelper(21000)
 trigger2=(enemy(var(0)),numproj=[1,2])||(((enemy(var(0)),numhelper-helper(21000),var(2))=[1,2])&&var(59)<=3)||enemy(var(0)),hitdefattr=sca,ap
 trigger2=var(56)&&helper(21000),var(1)
@@ -3252,7 +3254,7 @@ triggerall=p2dist x>=100
 triggerall=ctrl
 triggerall=p2statetype!=l
 triggerall=(stateno!=[120,155])||((stateno=[120,155])&&enemy(var(0)),time>(helper(21000),var(5)*1.0/3)&&(ctrl||movetype!=h))
-triggerall=enemy(var(0)),numproj<=0&&helper(21000),var(2)>=enemy(var(0)),numhelper
+triggerall=helper(30000),sysvar(4)=0;enemy(var(0)),numproj<=0&&helper(21000),var(2)>=enemy(var(0)),numhelper
 triggerall=var(58)!=5
 triggerall=numenemy=1||(numenemy=2&&(enemy(0),alive+enemy(numenemy>1),alive)=1)
 triggerall=!(p2name="Kung Fu Man"&&p2stateno=400)
@@ -3317,11 +3319,14 @@ triggerall=power<2500||p2life<100||random<10
 triggerall=ctrl||stateno=100&&time<10
 triggerall=stateno!=100||stateno=100&&time<10
 triggerall=!(enemy(var(0)),ctrl&&var(26+var(0))*5>7)
+triggerall=enemy(var(0)),vel y=0 && enemy(var(0)),pos y=0
 trigger1=random<var(59)*50+100+200*(p2stateno=[120,155])+100*(p2statetype=c)
 trigger1=p2bodydist x=[0,7]
+trigger1=p2bodydist x-var(47)*(1-helper(21000),var(59))*var(55)=[0,7]
 trigger1=(p2statetype=s)||(p2statetype=c)
 trigger1=p2movetype!=h
 trigger2=p2bodydist x=[0,10]
+trigger2=p2bodydist x-var(47)*(1-helper(21000),var(59))*var(55)=[0,10]
 trigger2=(p2statetype=s)||(p2statetype=c)
 trigger2=numtarget
 trigger2=enemy(var(0)),ctrl!=1
@@ -3339,7 +3344,8 @@ triggerall=(fvar(0)>12)
 triggerall=numexplod(5)=0
 triggerall=roundstate=2
 triggerall=ctrl||(stateno=52&&animtime=0)||stateno=100
-triggerall=enemy(var(0)),numproj<=1||(helper(21000),var(2)+1>=enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0&&(var(51)=[-40,60])&&(var(52)=[-80,60]))
+;triggerall=enemy(var(0)),numproj<=1||(helper(21000),var(2)+1>=enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0&&(var(51)=[-40,60])&&(var(52)=[-80,60]))
+triggerall=helper(30000),sysvar(4)!=0&&(var(51)=[-40,60])&&(var(52)=[-80,60])
 trigger1=numhelper(21000)
 trigger1=gametime>=(helper(21000),var(3)+30)
 trigger1=fvar(0)>(50-var(40)*5)
@@ -3364,6 +3370,38 @@ trigger4=numhelper(21000)
 trigger4=playeridexist(helper(21000),var(58))
 trigger4=(helper(21000),var(52+gametime%3)!=0&&helper(21000),var(52+gametime%3)=playerid(helper(21000),var(58)),stateno)
 trigger4=(helper(21000),var(52+gametime%3)=helper(21000),var(55))||(helper(21000),var(52+gametime%3)=helper(21000),var(56))||(helper(21000),var(52+gametime%3)=helper(21000),var(57))
+[state -1,ƒK[ƒLƒƒƒ“]
+type=changestate
+value=500
+triggerall=var(59)
+triggerall=statetype!=a
+triggerall=power>=500;ƒQ[ƒWÁ”ï
+triggerall=fvar(0)>=(fvar(3)/2)
+triggerall=(stateno=151)||(stateno=153)
+triggerall=p2stateno<1540
+triggerall=p2bodydist x=[-40,40]
+triggerall=p2bodydist y>-100
+triggerall=roundstate=2&&alive
+;triggerall=enemy(var(0)),numproj<=1&&helper(21000),var(2)+1+(random<10)>=enemy(var(0)),numhelper
+triggerall=helper(30000),sysvar(4)=0||helper(30000),sysvar(4)!=0&&!((var(51)=[-85,85])&&(var(52)=[-100,70]))
+triggerall=fvar(38)!=5
+triggerall=enemy(var(0)),hitdefattr=sca,aa,ap||(enemy(var(0)),animtime>-2&&(gethitvar(ctrltime)-time)>2)
+triggerall=(statetype=s&&p2statetype=c)||(statetype=c&&p2statetype=a)||random<500
+trigger1=var(40)=[4,9]
+trigger1=fvar(0)>(fvar(3)/2+fvar(3)/9)
+trigger1=random<var(59)*60-(4-var(40))*70
+trigger2=var(40)=[1,3]
+trigger2=fvar(0)>((fvar(3)*3)/4)
+trigger2=(life*1.0)/(lifemax*1.0)<0.33
+trigger2=random<var(59)*70
+trigger3=var(40)>=10
+trigger3=fvar(0)>((fvar(3)*2)/3)
+trigger3=((p2life*1.0)/(enemy(var(0)),lifemax*1.0)<0.25)&&((life*1.0)/(lifemax*1.0)<0.33)
+trigger3=random<var(59)*60
+trigger4=backedgebodydist<30+80*((life*1.0/lifemax*1.0)<0.3)
+trigger4=var(40)>=3
+trigger4=random<var(59)*35
+trigger4=fvar(0)>((fvar(3)*3)/8)
 ;===========================================================================
 [state -1,ƒK[ƒh]
 type=changestate
@@ -3385,7 +3423,8 @@ trigger3=numhelper(21000)
 trigger3=helper(21000),var(0)=1&&(random<(350+(var(59)*100)))
 trigger3=!inguarddist&&p2movetype=a
 trigger4=prevstateno=[5000,5270]
-trigger5=(enemy(var(0)),numproj>=1&&(var(56)=1&&var(57)=1))||(((enemy(var(0)),numhelper>helper(21000),var(2))&&(var(56)=1&&var(57)=1)&&var(59)<2)||helper(30000),sysvar(4)!=0&&(var(51)=[-85,85])&&(var(52)=[-100,70]))
+trigger5=1;(enemy(var(0)),numproj>=1&&(var(56)=1&&var(57)=1))||(((enemy(var(0)),numhelper>helper(21000),var(2))&&(var(56)=1&&var(57)=1)&&var(59)<2)||helper(30000),sysvar(4)!=0&&(var(51)=[-85,85])&&(var(52)=[-100,70]))
+trigger5=helper(30000),sysvar(4)!=0&&(var(51)=[-85,85])&&(var(52)=[-100,70])
 trigger6=numhelper(21000)
 trigger6=helper(21000),var(4)&&helper(21000),var(1)
 ;---------------------------------------------------------------------------
@@ -3453,37 +3492,6 @@ trigger11=numtarget!=0
 trigger11=target,stateno=[1381,1382]
 trigger11=target,time<=30
 ;------------------------------------------------------------------------------
-[state -1,ƒK[ƒLƒƒƒ“]
-type=changestate
-value=500
-triggerall=var(59)
-triggerall=statetype!=a
-triggerall=power>=500;ƒQ[ƒWÁ”ï
-triggerall=fvar(0)>=(fvar(3)/2)
-triggerall=(stateno=151)||(stateno=153)
-triggerall=p2stateno<1540
-triggerall=p2bodydist x=[-40,40]
-triggerall=p2bodydist y>-100
-triggerall=roundstate=2&&alive
-triggerall=enemy(var(0)),numproj<=1&&helper(21000),var(2)+1+(random<10)>=enemy(var(0)),numhelper
-triggerall=fvar(38)!=5
-triggerall=enemy(var(0)),hitdefattr=sca,aa,ap||(enemy(var(0)),animtime>-2&&(gethitvar(ctrltime)-time)>2)
-triggerall=(statetype=s&&p2statetype=c)||(statetype=c&&p2statetype=a)||random<500
-trigger1=var(40)=[4,9]
-trigger1=fvar(0)>(fvar(3)/2+fvar(3)/9)
-trigger1=random<var(59)*60-(4-var(40))*70
-trigger2=var(40)=[1,3]
-trigger2=fvar(0)>((fvar(3)*3)/4)
-trigger2=(life*1.0)/(lifemax*1.0)<0.33
-trigger2=random<var(59)*70
-trigger3=var(40)>=10
-trigger3=fvar(0)>((fvar(3)*2)/3)
-trigger3=((p2life*1.0)/(enemy(var(0)),lifemax*1.0)<0.25)&&((life*1.0)/(lifemax*1.0)<0.33)
-trigger3=random<var(59)*60
-trigger4=backedgebodydist<30+80*((life*1.0/lifemax*1.0)<0.3)
-trigger4=var(40)>=3
-trigger4=random<var(59)*35
-trigger4=fvar(0)>((fvar(3)*3)/8)
 [state -1,]
 type=changestate
 value=45
