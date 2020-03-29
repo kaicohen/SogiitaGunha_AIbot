@@ -1,0 +1,7583 @@
+;===========================================================================
+; 通常攻撃技
+;===========================================================================
+;---------------------------------------------------------------------------
+; 通常技はそんなに難しいテクニックは使ってないから、
+; テンプレートを見ながら確認すれば覚えやすいと思う。
+; 基本忘るべからず。
+;
+; ステートナンバーは、立ち技が２００～２９９、しゃがみ技が４００～４９９、
+; ジャンプ技が６００～６９９の間で決めて作るのが一般的。
+; しかし強制じゃないので自由に作っちゃってＯＫ。
+;---------------------------------------------------------------------------
+;===========================================================================
+;立ち弱パンチ       //
+;====================
+[statedef 200]
+type=s
+movetype=a
+physics=s
+ctrl=0
+anim=200
+poweradd=ceil(20*fvar(1))
+sprpriority=2
+facep2=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=time=0
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 200,ヒット定義]
+type=hitdef
+trigger1=movecontact=0
+attr=s,na;立ち通常打撃（Standing, Normal Attack）
+damage=25,0
+animtype=light
+guardflag=ma
+hitflag=maf
+priority=3,hit
+pausetime=8,8
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,ceil(-178*const(size.yscale))
+hitsound=s1,0
+guardsound=s1,10
+ground.type=high
+ground.slidetime=5
+ground.hittime=12
+guard.ctrltime=12
+ground.velocity=-3
+airguard.velocity=-1.9,-.8
+air.type=high
+air.velocity=-1.4,-3
+air.hittime=12
+fall.recovertime=12
+id=200
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=200
+postype=p1
+pos=ceil(130*const(size.xscale)),ceil(-178*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=900
+id=200
+postype=p1
+pos=ceil(130*const(size.xscale)),ceil(-178*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 200,コントロール]
+type=ctrlset
+trigger1=(animelemtime(14)>=0)
+value=1
+[state 200,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;立ち強パンチ       //
+;====================
+[statedef 210]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(30*fvar(1))
+ctrl=0
+anim=210
+facep2=1
+sprpriority=-1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 210,画像表示優先度]
+type=sprpriority
+trigger1=animelem=5
+value=5
+[state 210,物理的なキャラの幅]
+type=width
+trigger1=(animelemtime(2)>=0)&&(animelemtime(7)<0)
+edge=ceil(30*const(size.xscale)),0
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=7
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+[state 210,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=62
+guardflag=ma
+pausetime=15,15
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,ceil(-147*const(size.yscale))
+hitsound=s1,2
+guardsound=s1,10
+ground.type=low
+ground.slidetime=12
+ground.hittime=28
+guard.ctrltime=24
+ground.velocity=-2.5
+guard.velocity=-6
+air.velocity=-8,6
+ground.cornerpush.veloff=-15
+fall.yvelocity=-7
+air.fall=1
+fall.recover=0
+id=210
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=numtarget(210)!=0
+trigger1=target(210),statetype=a
+trigger1=(movehit=1)
+value=960
+id=210
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=210
+postype=p1
+pos=ceil(158*const(size.xscale)),ceil(-110*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1.2*const(size.xscale),1.2*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6000
+id=210
+postype=p1
+pos=ceil(168*const(size.xscale)),ceil(-110*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[弱からキャンセル]
+[state ,210]
+type=changeanim
+triggerall=(animelemtime(3)<0)
+trigger1=prevstateno=200
+trigger2=prevstateno=230
+value=210
+elem=3
+supermovetime=999999999999
+pausemovetime=999999999999
+persistent=0
+;---------------------[ヒット時振り切り]
+[state ,210]
+type=changeanim
+trigger1=(animelemtime(10)<0)
+trigger1=movecontact=1
+value=210
+elem=10
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 210,コントロール]
+type=ctrlset
+trigger1=anim=210
+trigger1=(animelemtime(31)>=0)
+value=1
+[state 210,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;直突き             //
+;====================
+[statedef 220]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(40*fvar(1))
+ctrl=0
+anim=220
+facep2=1
+sprpriority=5
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(6);◆行動コスト6%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=9
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=9
+anim=722
+id=220
+postype=p1
+pos=45,-32
+facing=1
+vfacing=1
+scale=0.4*const(size.xscale),0.5*const(size.yscale)
+bindtime=4
+removetime=-2
+removeongethit=1
+sprpriority=3
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF表側]
+type=explod
+trigger1=animelem=11
+anim=723
+id=220
+postype=p1
+pos=79,-65
+facing=1
+vfacing=1
+scale=0.3*const(size.xscale),0.6*const(size.yscale)
+bindtime=2
+removetime=-2
+removeongethit=1
+sprpriority=4
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;/////////////////////////////////////////
+[state 210,画像表示優先度]
+type=sprpriority
+trigger1=(animelemtime(5)>=0)
+value=5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 210,物理的なキャラの幅]
+type=width
+trigger1=(animelemtime(2)>=0)&&(animelemtime(7)<0)
+value=15,0;この場合キャラの幅を一時的に前に１５ピクセル伸ばす事になる。
+;値の意味は「前方のピクセル増減量,後方のピクセル増減量」
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=time=10
+value=0,0
+[state 210,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=67
+guardflag=ma
+pausetime=20,20
+guard.pausetime=10,10
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,ceil(-145*const(size.yscale))
+hitsound=s1,2
+guardsound=s1,11
+ground.type=low
+ground.slidetime=12
+ground.hittime=ceil(24/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(22/(1+(var(10)/10)));▲補正
+fall.recovertime=ceil(24/(1+(var(10)/10)));▲補正
+ground.cornerpush.veloff=-(var(10)*3);▲補正
+ground.velocity=-5.5
+guard.velocity=-9
+air.velocity=-2.5,-2
+air.fall=1
+fall.recover=0
+forcestand=1
+id=220
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6006
+id=220
+postype=p1
+pos=ceil(165*const(size.xscale)),ceil(-145*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=900
+id=220
+postype=p1
+pos=ceil(175*const(size.xscale)),ceil(-145*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,210]
+type=changeanim
+trigger1=(animelemtime(15)<0)
+trigger1=movecontact=1
+value=220
+elem=15
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 230,コントロール]
+type=veladd
+trigger1=animelem=9
+x=10
+persistent=0
+[state 230,コントロール]
+type=velset
+trigger1=animelemtime(9)>=4
+x=0
+[state 220,コントロール]
+type=ctrlset
+trigger1=(animelemtime(33)>=0)
+value=1
+[state 210,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;ちょっとすごいパンチ //
+;======================
+[statedef 225]
+type=s
+movetype=a
+physics=n
+velset=0,0
+ctrl=0
+facep2=1
+anim=225
+poweradd=ceil(50*fvar(1))
+sprpriority=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.8
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=2;◆ゆるい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 195,声]
+type=playsnd
+trigger1=animelem=17
+value=5,3+(random<=500)
+channel=0
+volume=100
+freqmul=1
+persistent=0
+[state 1000,振りかぶり]
+type=playsnd
+trigger1=animelem=2
+channel=2
+value=2,1
+volume=-128
+persistent=0
+[state 1000,突進音]
+type=playsnd
+trigger1=animelem=18
+channel=2
+value=2,2
+volume=-128
+persistent=0
+;---------------------[演出用エフェクト]
+[state ,突進サブ1008]
+type=explod
+trigger1=(animelemtime(22)>=0)
+anim=6013
+id=1008
+postype=p1
+pos=ceil(220*const(size.xscale)),ceil(-150*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+[state ,ライン]
+type=explod
+trigger1=animelemtime(21)>=0
+anim=226
+id=225
+postype=p1
+pos=ceil(90*const(size.xscale)),ceil(-180*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.6*const(size.xscale),0.6*const(size.yscale)
+bindtime=3
+removetime=-2
+removeongethit=1
+sprpriority=1
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+[state ,ライン]
+type=explod
+trigger1=animelemtime(23)>=0
+anim=227
+id=225
+postype=p1
+pos=ceil(250*const(size.xscale)),ceil(-130*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=3
+removetime=-2
+removeongethit=1
+sprpriority=1
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;---------------------[移動]
+[state velset]
+type=velset
+trigger1=animelem=23
+x=30
+[state velmul]
+type=velmul
+trigger1=1
+x=.7
+[state velset]
+type=velset
+trigger1=animelem=41
+x=0
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(25)<0
+value=ceil(160*const(size.xscale)),0
+;---------------------[攻撃判定]
+[state 1000,ヒット定義]
+type=hitdef
+trigger1=movecontact=0
+attr=s,na
+animtype=back
+damage=100,10
+priority=5,hit
+getpower=ceil(95*fvar(1)),28
+guardflag=m
+hitflag=maf
+pausetime=11,12
+hitsound=s1,5
+guardsound=s1,11
+sparkno=-1
+guard.sparkno=-1
+ground.type=high
+ground.hittime=ceil(25/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(20/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10))));▲補正
+fall.recovertime=ceil(120/(1+(var(10))));▲補正
+ground.velocity=-25,-7
+air.velocity=-25,-7
+yaccel=0.4
+fall=1
+fall.recover=0
+p2facing=1
+id=225
+ground.cornerpush.veloff=-10
+envshake.time=10
+envshake.freq=90
+envshake.ampl=10
+persistent=0
+[state 610,位置調整用]
+type=projectile
+trigger1=movecontact=1
+attr=s,ha
+damage=0,0
+getpower=0,0
+animtype=hard
+pausetime=0,12
+;-----------------------------------Projectile専用のパラメータ
+offset=0,0;飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=1010;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=2305;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+guardflag=-1
+hitflag=+af
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=-1
+ground.type=high
+ground.hittime=ceil(25/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(25/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10))));▲補正
+fall.recovertime=ceil(120/(1+(var(10))));▲補正
+ground.velocity=-25,-7
+air.velocity=-25,-7
+yaccel=0.4
+fall=1
+fall.recover=0
+p2facing=1
+numhits=0
+id=225
+snap=ceil(220*const(size.xscale)),ceil(-40*const(size.yscale))
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6010
+id=225
+postype=p1
+pos=ceil(230*const(size.xscale)),ceil(-160*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,ガードＥＦ]
+type=explod
+trigger1=moveguarded=1
+anim=6007
+id=225
+postype=p1
+pos=ceil(230*const(size.xscale)),ceil(-160*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り抜き]
+[state 1000,攻撃移行]
+type=changeanim
+triggerall=(animelemtime(27)<0)
+trigger1=movecontact=1
+trigger1=numtarget(225)=0
+value=225
+elem=27
+ignorehitpause=1
+persistent=0
+;---------------------[ステート移行]
+[state a]
+type=ctrlset
+trigger1=(animelemtime(46)>=0)
+value=1
+[state 1000,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;立ち弱キック	      //
+;======================
+[statedef 230]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(20*fvar(1))
+ctrl=0
+anim=230
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=4;◆きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(2);◆行動コスト2%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=1
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 230,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=32
+guardflag=ma
+pausetime=10,10
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,ceil(-125*const(size.yscale))
+hitsound=s1,0
+guardsound=s1,10
+ground.type=low
+ground.slidetime=10
+ground.hittime=18
+guard.ctrltime=18
+air.fall=1
+fall.recover=0
+ground.velocity=-4
+air.velocity=-3,-4
+ground.cornerpush.veloff=-5
+id=230
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=200
+postype=p1
+pos=ceil(150*const(size.xscale)),ceil(-125*const(size.yscale))
+facing=-1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=200
+postype=p1
+pos=ceil(160*const(size.xscale)),ceil(-135*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=(animelemtime(9)<0)
+trigger1=movecontact=1
+value=230
+elem=9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(28)>=0)
+value=1
+;---------------------[追加攻撃へ移行]
+[state 230,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)=0;★AIスイッチ
+triggerall=command="a"
+trigger1=(animelemtime(10)>=0)
+trigger2=(movecontact!=0)
+value=450
+ctrl=0
+[state 230,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)
+trigger1=p2bodydist x=[0,50]
+trigger1=(movecontact!=0)
+trigger1=p2movetype=h
+trigger1=(p2stateno!=[120,159])||var(59)<=3&&random<10-movecontact*5
+trigger1=random<var(59)*300
+trigger1=!inguarddist
+value=450
+ctrl=0
+[state 230,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;立ち強キック	      //
+;======================
+[statedef 240]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(30*fvar(1))
+ctrl=0
+anim=240
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=8
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=9
+x=4
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=10
+x=2
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=11
+x=2
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=12
+x=2
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=13
+x=1
+[state 240,軸位置移動]
+type=posadd
+trigger1=animelem=14
+x=1
+[state 240,音を鳴らす]
+type=playsnd
+trigger1=time=2
+value=0,1
+[state 240,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=62
+guardflag=ma
+pausetime=15,15
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,0
+hitsound=s1,1
+guardsound=s1,10
+ground.type=high
+ground.slidetime=12
+ground.hittime=27
+guard.ctrltime=25
+fall.recovertime=27
+ground.velocity=-6
+air.velocity=-2.2,-3.2
+ground.cornerpush.veloff=-10
+air.fall=1
+id=240
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=200
+postype=p1
+pos=ceil(185*const(size.xscale)),ceil(-180*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1.2*const(size.xscale),1.2*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=210
+postype=p1
+pos=ceil(195*const(size.xscale)),ceil(-190*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 240,コントロール]
+type=ctrlset
+trigger1=(animelemtime(38)>=0)
+value=1
+[state 240,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;地上蹴り上げ	      //
+;======================
+[statedef 250]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(40*fvar(1))
+ctrl=0
+anim=250+(numtarget(450)!=0)*5
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(6);◆行動コスト6%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 230,音を鳴らす]
+type=playsnd
+trigger1=time=2
+value=0,1
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=10
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=12
+anim=725
+id=250
+postype=p1
+pos=10,-10
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.67*const(size.yscale)
+bindtime=1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=74
+guardflag=ma
+hitflag=maf
+pausetime=15,15
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,ceil(-185*const(size.yscale))
+hitsound=s1,2
+guardsound=s1,10
+ground.type=high
+ground.slidetime=12
+ground.hittime=ceil(30/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(25/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10))));▲補正
+fall.recovertime=ceil(120/(1+(var(10))));▲補正
+fall.recover=(var(10)!=0);▲補正
+ground.velocity=-1,-8
+air.velocity=-2,-9
+air.fall=1
+yaccel=0.4
+ground.cornerpush.veloff=-(var(10)*5);▲補正
+id=250
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=numtarget(250)!=0
+trigger1=anim=255
+trigger1=(movehit=1)
+value=960
+id=250
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6006
+id=200
+postype=p1
+pos=ceil(135*const(size.xscale)),ceil(-185*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6004
+id=250
+postype=p1
+pos=ceil(155*const(size.xscale)),ceil(-185*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,210]
+type=changeanim
+trigger1=(animelemtime(16)<0)
+trigger1=movecontact=1
+value=250
+elem=16
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(46)>=0)
+value=1
+[state 230,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;すごいかかと落とし   //
+;======================
+[statedef 260]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(50*fvar(1))
+anim=260
+ctrl=0
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.8
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=2;◆ゆるい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+;---------------------[派生技時発生速化]
+[state 1000,攻撃移行]
+type=changeanim
+triggerall=(animelemtime(5)<0)
+trigger1=numtarget!=0
+value=260
+elem=10
+persistent=0
+[state 1000,風切音]
+type=playsnd
+trigger1=(animelemtime(9)>=0)
+channel=2
+value=2,1
+;volume = -128
+persistent=0
+[state 195,声]
+type=playsnd
+trigger1=(animelemtime(9)>=0)
+value=5,3
+channel=0
+volume=0
+freqmul=1
+persistent=0
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+triggerall=(statetype!=a)
+triggerall=animelemtime(25)<0
+trigger1=movecontact>=1
+value=260
+elem=25
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------[移動]
+[state velset]
+type=velset
+trigger1=animelemtime(25)=0
+x=0
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 810,掴んだ相手の位置1]
+type=targetbind
+trigger1=numtarget(260)!=0
+trigger1=target,stateno=1380
+trigger1=animelemtime(25)>=0
+trigger1=animelemtime(30)<0
+pos=ceil(40*const(size.xscale)),0
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(21)=0
+value=ceil(60*const(size.xscale)),0
+ignorehitpause=1
+persistent=0
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(21)=1
+value=ceil(90*const(size.xscale)),0
+ignorehitpause=1
+persistent=0
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(21)=2
+value=ceil(120*const(size.xscale)),0
+ignorehitpause=1
+persistent=1
+[state posadd]
+type=posadd
+trigger1=animelemtime(24)=0
+trigger2=movecontact>=1
+x=ceil(140*const(size.xscale))
+ignorehitpause=1
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(33)=0
+x=-ceil(5*const(size.xscale))
+ignorehitpause=1
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(34)=0
+x=-ceil(15*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(35)=0
+x=-ceil(15*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(36)=0
+x=-ceil(25*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(37)=0
+x=-ceil(17*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(38)=0
+x=-ceil(12*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(39)=0
+x=-ceil(12*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(40)=0
+x=-ceil(3*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(41)=0
+x=-ceil(18*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(42)=0
+x=-ceil(10*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(43)=0
+x=-ceil(10*const(size.xscale))
+persistent=0
+[state posadd]
+type=posadd
+trigger1=animelemtime(44)=0
+x=-ceil(10*const(size.xscale))
+persistent=0
+[state 3000,音を鳴らす]
+type=playsnd
+trigger1=(movecontact=0)&&(movereversed=0)
+trigger1=animelemtime(25)>0
+value=2,1900
+ignorehitpause=1
+persistent=0
+[state 1000]
+type=envshake
+trigger1=animelem=25
+freq=90
+ampl=10
+time=10
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelemtime(25)=0
+anim=1459
+id=1280
+postype=p1
+;pos = ceil(190*Const(size.xscale)),ceil(-5*Const(size.yscale))
+pos=ceil(50*const(size.xscale)),ceil(-5*const(size.yscale))
+facing=1
+vfacing=1
+scale=1.15*const(size.xscale),0.95*const(size.yscale)
+bindtime=2
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[攻撃]
+[state 1200,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,sa
+animtype=hard
+damage=70,6
+guardflag=ha
+hitflag=maf
+priority=4,hit
+pausetime=20,20
+sparkxy=0,0
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,4
+guardsound=s1,12
+ground.type=low
+ground.slidetime=16
+ground.hittime=ceil(35/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(30/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10)/10)));▲補正
+ground.velocity=-2,0
+ground.cornerpush.veloff=-2;相手が画面端の場合、自分に「ヒットバック」の速度を与える
+guard.velocity=-7
+air.velocity=-4,9
+airguard.velocity=-3.5,6
+yaccel=0.44
+air,fall=1
+fall.recover=0
+fall.yvelocity=-5
+forcestand=1
+id=260
+persistent=0
+[state 1200,ヒット定義]
+type=hitdef;■補正きつめver
+trigger1=prevstateno=1450
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,sa
+animtype=hard
+damage=70,6
+guardflag=ha
+hitflag=maf
+priority=4,hit
+pausetime=20,20
+sparkxy=0,0
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,4
+guardsound=s1,12
+ground.type=low
+ground.slidetime=16
+ground.hittime=ceil(35/(1+(var(10)/2)));▲補正
+guard.ctrltime=ceil(30/(1+(var(10)/2)));▲補正
+air.hittime=ceil(120/(1+(var(10)/2)));▲補正
+ground.velocity=-2,0
+ground.cornerpush.veloff=-2;相手が画面端の場合、自分に「ヒットバック」の速度を与える
+guard.velocity=-7
+air.velocity=-4,9
+airguard.velocity=-3.5,6
+yaccel=0.44
+air,fall=1
+fall.recover=0
+fall.yvelocity=-5
+forcestand=1
+id=260
+persistent=0
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=(var(10)<=1)
+trigger1=numtarget(260)!=0
+trigger1=target(260),statetype=a
+trigger1=(movehit=1)
+value=1380
+id=260
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,ガードＥＦ]
+type=explod
+triggerall=animelemtime(25)>=0
+trigger1=moveguarded=1
+anim=6007
+id=260
+postype=p2
+pos=0,ceil(-140*const(size.yscale))
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+triggerall=animelemtime(25)>=0
+trigger1=movehit=1
+anim=665
+id=260
+postype=p1
+pos=ceil(90*const(size.xscale)),ceil(-140*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ステート移行]
+[state 1515,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;---------------------------------------------------------------------------
+; ２Ｄ格ゲーでのしゃがみ通常攻撃は空中ガードが不可な作品が結構多い。
+; カンフーマンも例外ではなかったみたい。
+; ↓のしゃがみ弱パンチのguardflagが「L」のみになってるのに注目。
+; 意味は「Low」。相手はこのしゃがみ弱パンチをガードする場合、
+; 「しゃがみガードだけしか出来ない」という事になる。
+;
+; それ以外は簡単。
+;---------------------------------------------------------------------------
+;===========================================================================
+;しゃがみ弱パンチ　   //
+;======================
+[statedef 400]
+type=c
+movetype=a
+physics=c
+velset=0,0
+poweradd=ceil(20*fvar(1))
+ctrl=0
+anim=400
+sprpriority=2
+facep2=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=4
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 400,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=c,na;しゃがみ通常打撃（Crouching, Normal Attack）
+damage=25
+priority=3
+animtype=light
+hitflag=maf
+guardflag=l
+pausetime=8,8
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,0
+guardsound=s1,10
+ground.type=low
+ground.slidetime=4
+ground.hittime=10
+guard.ctrltime=10
+fall.recovertime=10
+ground.velocity=-4
+air.velocity=-1.5,-3
+id=400
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=400
+postype=p1
+pos=ceil(110*const(size.xscale)),ceil(-100*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=900
+id=400
+postype=p1
+pos=ceil(110*const(size.xscale)),ceil(-100*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(13)>=0)
+value=1
+[state 400,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=11;しゃがむステートへ（コモンステート）
+ctrl=1
+;===========================================================================
+;しゃがみ強パンチ　   //
+;======================
+[statedef 410]
+type=c
+movetype=a
+physics=c
+velset=0,0
+poweradd=ceil(40*fvar(1))
+ctrl=0
+anim=410
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=4
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+[state 230,コントロール]
+type=velset
+trigger1=animelem=5
+x=5
+[state 230,コントロール]
+type=velset
+trigger1=animelemtime(9)>=0
+x=0
+[state 410,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=c,na
+damage=83
+animtype=up
+hitflag=maf
+guardflag=m
+pausetime=6,6
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,2
+guardsound=s1,10
+ground.type=low
+ground.slidetime=12
+ground.hittime=20
+guard.ctrltime=18
+fall=1
+fall.recovertime=ceil(150*fvar(1))
+ground.velocity=-1,-10
+air.velocity=-2,-9
+ground.cornerpush.veloff=-15
+air.hittime=ceil(150*fvar(1))
+fall=(var(11)=0)
+fall.recover=1
+id=410
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=420
+postype=p1
+pos=ceil(70*const(size.xscale)),ceil(-180*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6004
+id=420
+postype=p1
+pos=ceil(70*const(size.xscale)),ceil(-200*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 1000,]
+type=changeanim
+triggerall=(animelemtime(8)<0)
+trigger1=movecontact!=0
+value=410
+elem=8
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=(animelemtime(12)<0)
+trigger1=movecontact!=0
+value=410
+elem=12
+ignorehitpause=0
+persistent=0
+[state 410,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=11
+ctrl=1
+;===========================================================================
+;しゃがみ弱キック　   //
+;======================
+[statedef 430]
+type=c
+movetype=a
+physics=c
+velset=0,0
+poweradd=ceil(20*fvar(1))
+ctrl=0
+anim=430
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=4;◆きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(2);◆行動コスト2%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=1
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 430,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=c,na
+damage=30
+animtype=light
+hitflag=maf
+guardflag=l
+pausetime=10,10
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,0
+guardsound=s1,10
+ground.type=low
+ground.slidetime=6
+ground.hittime=15
+guard.ctrltime=12
+air.fall=1
+fall.recover=0
+ground.velocity=-5
+air.velocity=-2,-3
+down.velocity=-5,0
+down.hittime=20
+id=430
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=430
+postype=p1
+pos=ceil(115*const(size.xscale)),ceil(-15*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=900
+id=430
+postype=p1
+pos=ceil(125*const(size.xscale)),ceil(-15*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 430,コントロール]
+type=ctrlset
+trigger1=(animelemtime(20)>=0)
+value=1
+;---------------------[追加攻撃へ移行]
+[state 430,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)=0;★AIスイッチ
+triggerall=command="a"
+trigger1=(animelemtime(8)>=0)
+trigger2=(movecontact!=0)
+value=450
+ctrl=0
+[state 430,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)
+trigger1=p2bodydist x=[0,50]
+trigger1=(movecontact!=0)
+trigger1=p2movetype=h
+trigger1=(p2stateno!=[120,159])||var(59)<3&&random<7-movecontact*2
+trigger1=random<var(59)*100
+trigger1=!inguarddist
+value=450
+ctrl=0
+[state 430,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=11
+ctrl=1
+;---------------------------------------------------------------------------
+; 誰もが攻撃手段としてお世話になる「足払い」はダウン属性の攻撃。
+; 実際に足払いの効果にするにはground.typeを「Trip」に、
+; fallを「1」にする必要がある。もちろん当たればジャグルポイントも消費。
+;
+; ここで一つ補足。ground.typeが「Trip」になっている場合、
+; 攻撃力や防御力に関係無く転ばした後に続く攻撃（「コンボ」など）が
+;『全て無条件でダメージに補正が掛かる』。
+; 必ず通常の半分のダメージ量に下がるので注意。
+;---------------------------------------------------------------------------
+;===========================================================================
+;しゃがみ強キック（足払い攻撃） //
+;================================
+[statedef 440]
+type=c
+movetype=a
+physics=c
+velset=0,0
+poweradd=ceil(30*fvar(1))
+ctrl=0
+anim=440
+facep2=1
+sprpriority=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=4
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+[state 440,ヒット定義]
+type=hitdef
+trigger1=animelemtime(13)<0
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=c,nt
+damage=60
+hitflag=ma
+guardflag=l
+pausetime=12,12
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,6
+guardsound=s1,10
+ground.type=low;この攻撃を食らうと相手は吹っ飛べば「転ぶアニメ」になる
+ground.slidetime=10
+ground.hittime=15
+guard.ctrltime=12
+fall.recovertime=15
+ground.velocity=-1.5,-4
+air.velocity=-1.2,-4
+guard.velocity=-5
+yaccel=0.3
+fall=1
+id=440
+ground.cornerpush.veloff=0
+[state 440,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+trigger1=animelemtime(13)>=0
+attr=c,na
+damage=62
+hitflag=ma
+guardflag=l
+pausetime=12,12
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,6
+guardsound=s1,10
+ground.type=low;この攻撃を食らうと相手は吹っ飛べば「転ぶアニメ」になる
+ground.slidetime=10
+ground.hittime=15
+guard.ctrltime=12
+fall.recovertime=15
+ground.velocity=-1.5,-4
+air.velocity=-1.2,-4
+guard.velocity=-5
+fall.yvelocity=-6
+yaccel=0.3
+fall=1
+id=440
+ground.cornerpush.veloff=0
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=numtarget(440)!=0
+trigger1=(movehit=1)
+value=960
+id=440
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=440
+postype=p1
+pos=ceil(p2dist x),ceil(-15*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=440
+postype=p1
+pos=ceil(p2dist x),ceil(-15*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=(animelemtime(13)<0)
+trigger1=movecontact=1
+value=440
+elem=13
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 440,コントロール]
+type=ctrlset
+trigger1=(animelemtime(27)>=0)
+value=1
+[state 440,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=11
+ctrl=1
+;===========================================================================
+;カッターキック (連打キャンセル繋ぎ) //
+;====================================
+[statedef 450]
+type=c
+movetype=a
+physics=c
+velset=0,0
+poweradd=ceil(40*fvar(1))
+ctrl=0
+anim=450
+facep2=1
+sprpriority=5
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5;▲きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=6
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=6
+anim=745
+id=420
+postype=p1
+pos=10,0
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.6*const(size.yscale)
+bindtime=1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=movecontact=1
+anim=746
+id=420
+postype=p1
+pos=10,0
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.6*const(size.yscale)
+bindtime=1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=11
+anim=747
+id=420
+postype=p1
+pos=10,0
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.6*const(size.yscale)
+bindtime=1
+removetime=-2
+removeongethit=1
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;/////////////////////////////////////////
+[state 440,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=c,na
+damage=25
+hitflag=mafd
+guardflag=l
+pausetime=12,12
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,2
+guardsound=s1,10
+ground.type=low
+ground.slidetime=10
+ground.hittime=15
+guard.ctrltime=15
+fall.recovertime=22
+ground.velocity=-3,0
+air.velocity=-3,-3
+guard.velocity=-5
+id=450
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=450
+postype=p1
+pos=ceil(p2dist x),ceil(-125*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=450
+postype=p1
+pos=ceil(220*const(size.xscale)),ceil(-125*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,コントロール]
+type=velset
+trigger1=animelem=5
+x=10
+[state 230,コントロール]
+type=velmul
+trigger1=(animelemtime(5)>0)
+x=.9
+[state 230,コントロール]
+type=velset
+trigger1=animelem=15
+x=0
+[state 230,コントロール]
+type=posadd
+trigger1=(animelemtime(15)>0)
+trigger1=(animelemtime(29)<0)
+x=1
+[state 450,コントロール]
+type=ctrlset
+trigger1=(animelemtime(29)>=0)
+value=1
+;---------------------[追加攻撃へ移行]
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)=0;★AIスイッチ
+triggerall=command="a"
+trigger1=(animelemtime(11)>=0)
+trigger2=(movecontact!=0)
+value=250
+ctrl=0
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)
+trigger1=p2bodydist x-var(47)*(7-enemy(var(0)),hitpausetime)*var(55)=[0,52]
+trigger1=(movecontact!=0)
+trigger1=p2movetype=h
+trigger1=random<var(59)*300
+trigger1=!inguarddist
+trigger1=p2stateno!=[120,150]
+trigger1=numhelper(21000)
+trigger1=helper(21000),var(11)>7
+value=250
+ctrl=0
+[state 440,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=11
+ctrl=1
+;===========================================================================
+;---------------------------------------------------------------------------
+; ジャンプ通常攻撃にChangeStateのコントローラが無いのは、
+; Physicsを「A」にしているから。
+; おまけフォルダの「小ネタ.txt」を参照。（Physicsの仕組み）
+;
+; しゃがみ通常技とは逆に、ジャンプ通常技は基本的に「中段属性」の攻撃。
+; しゃがみガードが出来ないのが普通なので、guardflagを「HA」にしておくのが定石。
+;「立ちガードの需要性」と「空対地のガードの揺さぶりによる駆け引き」を
+; プレイヤーに楽しんでもらうための先人達の知恵だね。
+;---------------------------------------------------------------------------
+;===========================================================================
+;ジャンプ弱パンチ		 //
+;================================
+[statedef 600]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(20*fvar(1))
+ctrl=0
+anim=600
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=1
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 600,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na;空中通常打撃（Air, Normal Attack）
+damage=25
+guardflag=ma
+priority=3
+pausetime=8,8
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,0
+guardsound=s1,10
+ground.type=high
+ground.slidetime=5
+ground.hittime=10
+guard.ctrltime=10
+fall.recovertime=10
+ground.velocity=-4
+air.velocity=-1.3,-3
+id=600
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=600
+postype=p1
+pos=ceil(120*const(size.xscale)),ceil(-185*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=900
+id=600
+postype=p1
+pos=ceil(120*const(size.xscale)),ceil(-185*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=(animelemtime(10)<0)
+trigger1=movecontact=1
+value=600
+elem=10
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 600,コントロール]
+type=ctrlset
+trigger1=(animelemtime(18)>=0)
+value=1
+;===========================================================================
+;ジャンプ強パンチ		 //
+;=================================
+[statedef 610]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(30*fvar(1))
+velset=(vel x),-2
+ctrl=0
+anim=610
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=9
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+;---------------------[発生速度調整]
+[state 1000,攻撃移行]
+type=changeanim
+triggerall=(numtarget!=0)
+trigger1=time=0
+value=610
+elem=5
+persistent=0
+;----------------------------[攻撃判定]
+[state 610,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na
+damage=73
+guardflag=ha;相手はしゃがみガードが出来ない
+priority=4
+pausetime=20,20
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,1
+guardsound=s1,10
+animtype=med
+ground.type=high
+ground.slidetime=15
+ground.hittime=24
+guard.ctrltime=24
+fall.recovertime=24
+ground.velocity=-5
+air.velocity=-3,1
+id=610
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=610
+postype=p1
+pos=ceil(150*const(size.xscale)),ceil(-110*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6002
+id=610
+postype=p1
+pos=ceil(160*const(size.xscale)),ceil(-100*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=(animelemtime(14)<0)
+trigger1=movecontact=1
+value=610
+elem=14
+supermovetime=999999999999
+pausemovetime=999999999999
+;ignorehitpause = 1 
+persistent=0
+[state 610,コントロール]
+type=ctrlset
+trigger1=(animelemtime(43)>=0)
+value=1
+;===========================================================================
+;叩き落とし　　　		 //
+;================================
+[statedef 620]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(40*fvar(1))
+velset=(vel x),-2
+ctrl=0
+anim=620
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(6);◆行動コスト6%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=5
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=4
+anim=762
+id=620
+postype=p1
+pos=ceil(40*const(size.xscale)),ceil(-60*const(size.yscale))
+facing=1
+vfacing=1
+scale=1*const(size.xscale),0.7*const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;/////////////////////////////////////////
+[state 610,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na
+damage=74
+guardflag=ha;相手はしゃがみガードが出来ない
+priority=4
+pausetime=15,ceil(15/(1+var(10)))
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,-55
+hitsound=s1,2
+guardsound=s1,10
+animtype=hard
+ground.type=low
+ground.slidetime=15
+ground.hittime=ceil(25/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(15/(1+(var(10)/10)));▲補正
+air.hittime=ceil(25/(1+(var(10)/10)));▲補正
+fall.recovertime=ceil(25/(1+(var(10)/10)));▲補正
+fall.recover=(var(10)>=1);▲補正
+ground.velocity=-5
+air.velocity=-3,20
+fall.yvelocity=-(10/(1+var(10)*0.2));▲補正
+yaccel=0.4
+p2facing=1
+air.fall=1
+id=620
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=var(10)<=1
+trigger1=numtarget(620)!=0
+trigger1=target(620),statetype=a
+trigger1=(movehit=1)
+value=1710
+id=620
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6006
+id=620
+postype=p1
+pos=ceil(95*const(size.xscale)),ceil((-75+(animelemtime(11))*60)*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6004
+id=620
+postype=p1
+pos=ceil(115*const(size.xscale)),ceil((-75+(animelemtime(11))*60)*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,620]
+type=changeanim
+trigger1=(animelemtime(11)<0)
+trigger1=movecontact=1
+value=620
+elem=11
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 610,コントロール]
+type=ctrlset
+trigger1=(animelemtime(42)>=0)
+value=1
+;===========================================================================
+;ジャンプ弱キック　　　		 //
+;================================
+[statedef 630]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(20*fvar(1))
+ctrl=0
+anim=630
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=4;◆きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(2);◆行動コスト2%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=1
+channel=2
+value=2,0
+[state 195,声]
+type=playsnd
+trigger1=(random<=800)
+trigger1=animelem=1
+value=5,0+(random<=500)
+channel=0
+persistent=0
+[state 630,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na
+damage=26
+guardflag=ma
+priority=3
+pausetime=12,12
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,0
+guardsound=s1,10
+ground.type=high
+ground.slidetime=10
+ground.hittime=15
+guard.ctrltime=15
+fall.recovertime=15
+ground.velocity=-4
+air.velocity=-2,-3
+id=630
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=630
+postype=p1
+pos=ceil(135*const(size.xscale)),ceil(-30*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6001
+id=630
+postype=p1
+pos=ceil(135*const(size.xscale)),ceil(-30*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,620]
+type=changeanim
+trigger1=(animelemtime(12)<0)
+trigger1=movecontact=1
+value=630
+elem=12
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(29)>=0)
+value=1
+;---------------------[追加攻撃へ移行]
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)=0;★AIスイッチ
+triggerall=command="a"
+trigger1=(animelemtime(9)>=0)
+trigger2=(movecontact!=0)||(movereversed!=0)
+value=680
+ctrl=0
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)
+triggerall=roundstate=2&&enemy(var(0)),alive&&alive
+triggerall=random<var(59)*40
+triggerall=p2statetype!=l
+triggerall=(p2statetype=a&&random<var(59)*80)||p2statetype!=a&&random<var(59)*280
+triggerall=statetype=a
+triggerall=!inguarddist
+trigger1=(animelemtime(9)>=0)
+trigger1=p2movetype=h&&enemy(var(0)),ctrl=0&&enemy(var(0)),canrecover=0&&p2stateno!=[120,155]
+trigger1=p2bodydist x-enemy(var(0)),vel x*6*var(55)=[0,40]
+trigger2=(movecontact!=0)
+trigger2=p2bodydist x-enemy(var(0)),vel x*6*var(55)=[0,40]
+trigger2=p2stateno=[5000,5999]
+value=680
+ctrl=0
+;===========================================================================
+;ジャンプ強キック　　　		 //
+;================================
+[statedef 640]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(30*fvar(1))
+velset=(vel x),-2
+ctrl=0
+anim=640
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(4);◆行動コスト4%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=6
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+[state 640,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na
+damage=71
+guardflag=ha
+priority=4
+pausetime=20,20
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,1
+guardsound=s1,10
+animtype=med
+ground.type=high
+ground.hittime=20
+guard.ctrltime=20
+fall.recovertime=20
+ground.velocity=-5
+air.velocity=-3,-4
+id=640
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=640
+postype=p1
+pos=ceil(p2dist x),ceil(-130*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=640
+postype=p1
+pos=ceil(p2dist x),ceil(-130*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(32)>=0)
+value=1
+;===========================================================================
+;下降キック　　　		 //
+;================================
+[statedef 650]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(40*fvar(1))
+velset=(vel x),-2
+ctrl=0
+anim=650
+;facep2   = 1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(6);◆行動コスト6%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 230,コントロール]
+type=veladd
+trigger1=vel x>=0
+trigger1=time=0
+x=2
+persistent=0
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=4
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=4
+anim=765
+id=655
+postype=p1
+pos=ceil(50*const(size.xscale)),ceil(20*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=-1
+removetime=30
+removeongethit=1
+sprpriority=-2
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=4
+anim=765
+id=655
+postype=p1
+pos=ceil(40*const(size.xscale)),ceil(20*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.85*const(size.xscale),0.9*const(size.yscale)
+bindtime=-1
+removetime=30
+removeongethit=1
+sprpriority=-2
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=4
+anim=765
+id=655
+postype=p1
+pos=ceil(55*const(size.xscale)),ceil(20*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=-1
+removetime=30
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=4
+anim=765
+id=655
+postype=p1
+pos=ceil(40*const(size.xscale)),ceil(20*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.45*const(size.xscale),0.5*const(size.yscale)
+bindtime=-1
+removetime=30
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 220,ラインEF]
+type=explod
+trigger1=vel y>0
+trigger1=pos y>-5
+anim=766
+id=655
+postype=p1
+pos=ceil(50*const(size.xscale)),ceil(20*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;-----------------------------------
+;エフェクト消し
+[state -2,斜め下]
+type=removeexplod
+trigger1=numexplod(661)!=0
+id=655
+;/////////////////////////////////////////
+[state 640,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,na
+damage=72
+guardflag=ha
+priority=4
+pausetime=15,15
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,2
+guardsound=s1,10
+animtype=med
+ground.type=high
+ground.slidetime=15
+ground.hittime=ceil(24/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(12/(1+(var(10)/10)));▲補正
+air.hittime=ceil(24/(1+(var(10)/10)));▲補正
+fall.recovertime=ceil(25/(1+(var(10))));▲補正
+fall.recover=(var(10)!=0);▲補正
+air.fall=1
+ground.velocity=-2
+air.velocity=-3,20
+id=650
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6006
+id=650
+postype=p1
+pos=ceil(35*const(size.xscale)),ceil(-50*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6004
+id=650
+postype=p1
+pos=ceil(35*const(size.xscale)),ceil(-65*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,コントロール]
+type=velset
+trigger1=animelem=6
+y=10
+;===========================================================================
+;空中かかと落とし　　　		 //
+;================================
+[statedef 660]
+type=a
+movetype=a
+physics=n
+poweradd=ceil(50*fvar(1))
+ctrl=0
+facep2=1
+anim=660
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=2;◆ゆるい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0%
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+;---------------------[連携時発生速化]
+[state ,1200]
+type=changeanim
+trigger1=time=0
+trigger1=numtarget!=0
+value=660
+elem=5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------
+[state 3000,音を鳴らす]
+type=playsnd
+trigger1=animelemtime(9)>=0
+value=2,1
+ignorehitpause=1
+persistent=0
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(15)<=0
+edge=ceil(120*const(size.xscale)),0
+ignorehitpause=1
+persistent=1
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelemtime(10)=0
+anim=1459
+id=660
+postype=p1
+pos=ceil(140*const(size.xscale)),ceil(-50*const(size.yscale))
+facing=1
+vfacing=1
+scale=1.3*const(size.xscale),0.9*const(size.yscale)
+bindtime=3
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[攻撃判定]
+[state 610,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,sa
+damage=70
+guardflag=ha
+priority=4
+pausetime=10,5
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,5
+guardsound=s1,11
+animtype=hard
+ground.type=low
+ground.slidetime=15
+ground.hittime=ceil(30/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(25/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10))));▲補正
+fall.recovertime=ceil(120/(1+(var(10))));▲補正
+fall.recover=(var(10)!=0);▲補正
+ground.velocity=-4
+air.velocity=-4,60
+yaccel=0.66
+air.fall=1
+fall.yvelocity=-10
+fall.damage=5
+envshake.time=10
+envshake.freq=120
+envshake.ampl=10
+p2facing=1
+persistent=1
+id=660
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=var(10)<=1
+trigger1=numtarget(660)!=0
+trigger1=target(660),statetype=a
+trigger1=(movehit=1)
+value=1710
+id=660
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,ガードＥＦ]
+type=explod
+trigger1=moveguarded=1
+anim=6007
+id=1450
+postype=p2
+pos=0,ceil(-140*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=665+(p2dist x<30)*5365
+id=660
+postype=p1
+pos=ceil((170-(p2dist x<30)*150)*const(size.xscale)),-ceil((60-(p2dist x<30)*40)*const(size.yscale))
+facing=-1
+vfacing=1-(p2dist x<30)*2
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=animelemtime(13)<0
+trigger1=movecontact>=1
+value=660
+elem=13
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 重力]
+type=velset
+trigger1=time=0
+x=vel x*0.8
+[state 重力]
+type=velset
+trigger1=time=0
+trigger2=animelemtime(9)<0
+trigger2=vel y>0
+y=0
+[state 重力]
+type=veladd
+trigger1=animelemtime(9)>=0
+trigger2=vel y<0
+y=.66
+[state 1210,ステート変更]
+type=changestate
+trigger1=pos y>=0
+value=1260
+;===========================================================================
+;空中殴り飛ばし　　　		 //
+;================================
+[statedef 670]
+type=a
+movetype=a
+physics=n
+poweradd=ceil(50*fvar(1))
+ctrl=0
+facep2=1
+anim=670
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.9
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=2;◆ゆるい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常攻撃では使わない予定
+[state -2,技使用フラグ]
+type=varset
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(10)=7777
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/100)*(0);◆行動コスト0
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 1000,突進音]
+type=playsnd
+trigger1=animelem=13
+channel=2
+value=2,1
+persistent=0
+[state 195,声]
+type=playsnd
+trigger1=animelem=1
+trigger1=(random<=800)
+value=5,3+(random<=500)
+channel=0
+volume=120
+freqmul=1
+persistent=0
+[state -2,押し判定]
+type=playerpush
+trigger1=1
+value=0;相手を押さず、すり抜ける事が出来る
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+;---------------------[移動制御]
+[state velset]
+type=velset
+trigger1=time=0
+x=vel x/2
+y=vel y/5
+persistent=0
+[state velset]
+type=veladd
+trigger1=animelemtime(19)>0
+y=0.66
+[state velset]
+type=posadd
+trigger1=animelemtime(19)<=0
+y=-(vel y)
+[state velset]
+type=posadd
+trigger1=animelemtime(15)>=0
+x=ceil(70*const(size.xscale))
+persistent=0
+;---------------------[演出用エフェクト]
+[state ,ライン]
+type=explod
+trigger1=animelemtime(15)>=0
+anim=675
+id=670
+postype=p1
+pos=0,ceil(-100*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.8*const(size.xscale),0.6*const(size.yscale)
+bindtime=10
+removetime=-2
+removeongethit=1
+sprpriority=1
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;---------------------[攻撃判定]
+[state 610,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=a,sa
+damage=70
+guardflag=ha
+priority=4
+pausetime=10,10
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,2
+guardsound=s1,11
+animtype=hard
+ground.type=low
+air.type=low
+ground.slidetime=15
+ground.hittime=ceil(30/(1+(var(10)/10)));▲補正
+guard.ctrltime=ceil(25/(1+(var(10)/10)));▲補正
+air.hittime=ceil(120/(1+(var(10))));▲補正
+fall.recovertime=ceil(120/(1+(var(10))));▲補正
+fall.recover=(var(10)!=0);▲補正
+ground.velocity=-8
+air.velocity=-10,-0.5
+yaccel=0.5
+fall.yvelocity=-8
+id=670
+persistent=1
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=var(10)<=1
+trigger1=numtarget(670)!=0
+trigger1=target(670),statetype=a
+trigger1=(movehit=1)
+value=1704
+id=670
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,ガードＥＦ]
+type=explod
+trigger1=moveguarded=1
+anim=6007
+id=670
+postype=p1
+pos=(ceil(p2dist x)+ceil(20*const(size.xscale))),ceil(-170*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6010+(p2statetype!=a)*10
+id=670
+postype=p2
+pos=-20,(-ceil(p2dist y)-ceil(120*const(size.yscale)))
+facing=-1
+vfacing=-1
+scale=0.8*const(size.xscale),0.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=animelemtime(13)>0
+value=ceil(150*const(size.xscale)),0
+;---------------------[ヒット時振り切り]
+[state ,210]
+type=changeanim
+trigger1=(animelemtime(18)<0)
+trigger1=movecontact=1
+value=670
+elem=18
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 1210,ステート変更]
+type=changestate
+trigger1=pos y>=0
+value=1260
+;===========================================================================
+;空中蹴り上げ (連打キャンセル繋ぎ)//
+;==================================
+[statedef 680]
+type=a
+movetype=a
+physics=a
+poweradd=ceil(20*fvar(1))
+velset=(vel x),-2
+ctrl=0
+anim=680
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.7
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5;▲きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=6
+channel=2
+value=2,1
+[state 195,声]
+type=playsnd
+trigger1=(random<=1000)
+trigger1=animelem=1
+value=5,2+(random<=500)
+channel=0
+persistent=0
+;/////////////////////////////////////////
+;ラインEF記述
+[state 220,ラインEF]
+type=explod
+trigger1=animelem=5
+anim=742
+id=680
+postype=p1
+pos=ceil(-20*const(size.xscale)),ceil(40*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.7*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+removeongethit=1
+sprpriority=-2
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=medium
+damage=70
+guardflag=ma
+pausetime=12,12
+sparkno=-1
+guard.sparkno=-1
+sparkxy=-10,0
+hitsound=s1,2
+guardsound=s1,10
+ground.type=high
+ground.slidetime=12
+ground.hittime=15
+guard.ctrltime=15
+air.hittime=15
+fall.recovertime=32
+ground.velocity=-1,-6
+air.velocity=-2,-7
+air.fall=1
+fall.recover=0
+yaccel=0.4
+ground.cornerpush.veloff=0
+id=680
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state 200,通常ガード]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=200
+postype=p1
+pos=ceil(135*const(size.xscale)),ceil(-160*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 200,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6004
+id=250
+postype=p1
+pos=ceil(155*const(size.xscale)),ceil(-165*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,210]
+type=changeanim
+trigger1=(animelemtime(16)<0)
+trigger1=movecontact=1
+value=680
+elem=15
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state velset]
+type=posadd
+trigger1=movecontact=1
+y=-20
+persistent=0
+;---------------------[追加攻撃へ移行]
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)=0;★AIスイッチ
+triggerall=command="a"
+trigger1=(animelemtime(7)>0)
+trigger2=(movecontact!=0)
+value=620
+ctrl=0
+[state 450,追加攻撃ステートへ移行]
+type=changestate
+triggerall=var(59)
+triggerall=roundstate=2&&enemy(var(0)),alive&&alive
+triggerall=random<var(59)*40
+triggerall=p2statetype!=l
+triggerall=p2statetype=a
+triggerall=statetype=a
+triggerall=(random<var(59)*40*(200*(enemy(var(0)),pos y=[-50,-20])))||random<50
+triggerall=!inguarddist
+trigger1=(animelemtime(9)>=0)
+trigger1=p2movetype=h&&enemy(var(0)),ctrl=0&&enemy(var(0)),canrecover=0&&p2stateno!=[120,155]
+trigger1=p2bodydist x-enemy(var(0)),vel x*6*var(55)=[0,40]
+trigger2=(movecontact!=0)
+trigger2=p2bodydist x-enemy(var(0)),vel x*6*var(55)=[0,40]
+trigger2=p2stateno=[5000,5999]
+value=620
+ctrl=0
+;===========================================================================
+;ガーキャン　　　		 //
+;================================
+[statedef 500]
+type=s
+movetype=i
+physics=s
+velset=0,0
+ctrl=0
+anim=500
+poweradd=-500
+sprpriority=7
+facep2=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=projcontact500=1
+triggerall=numtarget(500)>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5;▲きつめ
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=projcontact500=1
+trigger1=numtarget(500)>=1
+var(11)=5;◆すごいきつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+var(40)=-1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/2)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 3000,赤炎エフェ]
+type=explod
+trigger1=time=0
+anim=(3200+(random>=500)*5)
+id=76
+postype=p1
+pos=0,0
+facing=1
+vfacing=1
+scale=1.5*const(size.xscale),1.5*const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+[state 1000,空キャン音]
+type=playsnd
+trigger1=time=0
+channel=4
+value=2,2200
+persistent=0
+[state 195,声]
+type=playsnd
+trigger1=animelem=1
+value=5,500
+channel=0
+volume=128
+persistent=0
+[state 1000,0]
+type=palfx
+trigger1=animelemtime(20)<=0
+time=1
+add=220,20,10
+mul=256,256,256
+sinadd=0,0,0,10
+invertall=0
+color=256
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 610,生当て用]
+type=projectile
+trigger1=time<=5
+attr=s,ht;立ち必殺飛び道具（Standing, Special Projectile）
+damage=0,0
+getpower=100,10
+animtype=hard
+pausetime=0,5
+;-----------------------------------Projectile専用のパラメータ
+offset=0,ceil(-120*const(size.yscale));飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=500;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=505;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+hitflag=-maf
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=s1,10
+ground.type=low
+ground.slidetime=24
+ground.hittime=30
+ground.velocity=-4,-3
+air.velocity=-4,-3
+air.hittime=120
+p2facing=1
+fall=1
+fall.recover=0
+id=500
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 610,壁バウンド誘導用]
+type=projectile
+trigger1=time=0
+attr=s,hp;立ち必殺飛び道具（Standing, Special Projectile）
+damage=0,0
+getpower=0,0
+animtype=hard
+pausetime=0,5
+;-----------------------------------Projectile専用のパラメータ
+offset=0,ceil(-120*const(size.yscale));飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=510;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=505;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=5;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+guardflag=-1
+hitflag=+af
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=-1
+ground.type=high
+ground.slidetime=25
+ground.hittime=25
+guard.ctrltime=25
+ground.velocity=-8,-6
+air.velocity=-8,-3
+air.hittime=25
+yaccel=0.4
+fall=1
+fall.recover=0
+id=500
+p2facing=1
+p2stateno=1005
+numhits=0
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;爆発エフェクト
+[state 200,通常]
+type=explod
+trigger1=time=0
+anim=510
+id=500
+postype=p1
+pos=0,ceil(-120*const(size.yscale))
+facing=-1
+vfacing=1
+scale=1.8*const(size.xscale),1.8*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 200,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+; 投げ技
+;===========================================================================
+;---------------------------------------------------------------------------
+; エレクバイトが「作るのが退屈と感じる時もあるよ」って言ってるけど、
+; 作り出したら意外とハマって楽しくなる投げ技。
+; 投げる相手の正確な座標取りは面倒臭いけどね（コラ
+; 投げ用のHitDefはテンプレートと見比べて確認すればわかるはず。
+;---------------------------------------------------------------------------
+;===========================================================================
+;カンフースルー：掴み		 //
+;=================================
+[statedef 800]
+type=s
+movetype=a
+physics=s
+velset=0,0
+ctrl=0
+anim=800
+sprpriority=2
+[state 800,ヒット定義（投げ用）]
+type=hitdef
+trigger1=time=0
+pausetime=0,0
+attr=s,nt;立ち通常投げ（Standing, Normal Throw）
+hitflag=m-;マイナスが付加されてるので相手が食らい中の時は掴めない
+priority=1,miss
+sparkno=-1;-1だからヒットスパークは表示しない
+p1sprpriority=1
+p1facing=1
+p2facing=1
+p1stateno=810
+p2stateno=820
+guard.dist=0;相手のガード態勢に入る距離を０にしてるので、ガード不可
+fall=1
+id=800
+[state 800,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=850
+ctrl=1
+;===========================================================================
+;カンフースルー：成功(放り投げる) //
+;=================================
+[statedef 810]
+type=s
+movetype=i
+physics=n
+anim=810
+poweradd=40
+[state -2,特殊ゲージ回復]
+type=varadd
+trigger1=roundstate=2
+trigger1=fvar(0)<fvar(3)
+fvar(0)=((fvar(3)/900)/(1+(numexplod(7050)!=0)))*(1+(var(40)*0.3))
+ignorehitpause=1
+persistent=1
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=time=0
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=time=0
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+[state 810,音を鳴らす];掴み用
+type=playsnd
+trigger1=animelem=1
+value=1,7
+[state 810,音を鳴らす];頭突き音
+type=playsnd
+trigger1=animelem=15
+value=1,2
+[state 195,声]
+type=playsnd
+trigger1=animelem=14
+value=5,2+(random<=500)
+channel=0
+freqmul=1
+persistent=0
+[state 810,ステート変更];投げ抜けられ
+type=changestate
+trigger1=animelemtime(2)>0
+trigger1=numtarget(800)=0
+value=811
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=1
+value=ceil(160*const(size.xscale)),0
+[state 810,掴んだ相手の位置1];TargetBindで相手を一時的に拘束
+type=targetbind
+trigger1=animelemtime(2)<=0
+pos=ceil(115*const(size.xscale)),ceil(-145*const(size.yscale));自分の軸位置から相手の軸をX=28・Y=0の位置にする
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置2]
+type=targetbind
+trigger1=animelemtime(2)>=0
+trigger1=animelemtime(3)<=0
+pos=ceil(110*const(size.xscale)),ceil(-145*const(size.yscale))
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置3]
+type=targetbind
+trigger1=animelemtime(3)>=0
+trigger1=animelemtime(4)<=0
+pos=ceil(95*const(size.xscale)),ceil(-145*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置4]
+type=targetbind
+trigger1=animelemtime(4)>=0
+trigger1=animelemtime(5)<=0
+pos=ceil(82*const(size.xscale)),ceil(-145*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置5]
+type=targetbind
+trigger1=animelemtime(5)>=0
+trigger1=animelemtime(6)<=0
+pos=ceil(72*const(size.xscale)),ceil(-145*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置6]
+type=targetbind
+trigger1=animelemtime(6)>=0
+trigger1=animelemtime(7)<=0
+pos=ceil(68*const(size.xscale)),ceil(-145*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置7]
+type=targetbind
+trigger1=animelemtime(7)>=0
+trigger1=animelemtime(13)<=0
+pos=ceil(64*const(size.xscale)),ceil(-142*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置13]
+type=targetbind
+trigger1=animelemtime(13)>=0
+trigger1=animelemtime(14)<=0
+pos=ceil(64*const(size.xscale)),ceil(-136*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置14]
+type=targetbind
+trigger1=animelemtime(14)>=0
+trigger1=animelemtime(15)<=0
+pos=ceil(67*const(size.xscale)),ceil(-125*const(size.yscale))
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置15]
+type=targetbind
+trigger1=animelemtime(15)>=0
+trigger1=animelemtime(16)<=0
+pos=ceil(68*const(size.xscale)),ceil(-115*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置16]
+type=targetbind
+trigger1=animelemtime(16)>=0
+trigger1=animelemtime(20)<=0
+pos=ceil(76*const(size.xscale)),ceil(-115*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state 810,掴んだ相手の位置20]
+type=targetbind
+trigger1=animelemtime(20)>=0
+trigger1=animelemtime(28)<=0
+pos=ceil(76*const(size.xscale)),ceil(-115*const(size.yscale))
+id=800
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+;相手が食らい状態の時のみ機能するTarget系コントローラ
+[state 810,掴んだ相手のライフ増減]
+type=targetlifeadd
+trigger1=animelem=15
+value=-60
+id=800
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=animelem=15
+anim=6000
+id=800
+postype=p1
+pos=ceil(75*const(size.xscale)),ceil(-195*const(size.yscale))
+facing=1
+vfacing=-1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(42)>=0)
+value=1
+[state 810,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;カンフースルー：投げ抜けされ	 //
+;=================================
+[statedef 811]
+type=s
+movetype=i
+physics=s
+velset=-5,0
+anim=830
+poweradd=40
+[state 810,音を鳴らす];掴み用
+type=playsnd
+trigger1=animelem=2
+value=1,1
+[state 810,音を鳴らす];放り投げ用
+type=playsnd
+trigger1=animelem=7
+value=5,5000
+[state 230,コントロール]
+type=ctrlset
+trigger1=(animelemtime(36)>=0)
+value=1
+[state 810,ステート変更]
+type=changestate
+trigger1=animtime>=0
+trigger2=(animelemtime(36)>=0)
+value=0
+ctrl=1
+;---------------------------------------------------------------------------
+; こっちは制御を奪った相手の食らいステート。
+; 相手の制御を解く場合、「ChangeState」のコントローラにしてしまうと
+;「相手が制御を奪われた状態のままになるバグ」が発生してしまう。
+; なので必ず『SelfState』で相手のステートに戻し、制御を解除しないといけない。
+; そこさえ注意しておけば、自由に相手の食らいモーションを設定出来る。
+;
+; デバッグ表示中に相手の情報の一部の文字が黄色になったら、それが
+; P2StateNoやTargetStateで制御を奪われた状態の証。
+; 投げが成功したらCtrl+Dで相手側の情報を確認だ！m9っ｀Д´)
+;===========================================================================
+;カンフースルー：相手側1（掴まれて放り投げられるまで） //
+;=======================================================
+[statedef 820]
+type=a
+movetype=h
+physics=n
+ctrl=0
+anim=5110
+velset=0,0
+[state -2,押し判定]
+type=playerpush
+trigger1=1
+value=0;相手を押さず、すり抜ける事が出来る
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 820,相手のアニメ変更]
+type=changeanim2
+trigger1=time=0
+trigger2=anim!=820
+value=820
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 820,位置調整]
+type=posadd
+trigger1=time>53
+trigger1=!gethitvar(isbound);（※３）
+x=-10
+y=20
+persistent=0
+[state 820,落下ステートへ]
+type=changestate
+trigger1=time>53
+trigger1=!gethitvar(isbound);（※３）
+value=821
+[state 810,ステート変更];投げ抜けられ
+type=changestate
+trigger1=time=[20,25]
+trigger1=command="recovery"
+value=825
+;===========================================================================
+;カンフースルー：相手側2（落下）	//
+;========================================
+[statedef 821]
+type=a
+movetype=h
+physics=n
+[state -2,押し判定]
+type=playerpush
+trigger1=1
+value=0;相手を押さず、すり抜ける事が出来る
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 823,移動速度]
+type=posadd
+trigger1=1
+x=15
+persistent=0
+[state 823,移動速度]
+type=velset
+trigger1=1
+y=-2
+persistent=0
+[state 823,移動速度]
+type=velset
+trigger1=1
+x=-1.2
+persistent=1
+[state 1028,速度加算];重力
+type=veladd
+trigger1=1
+y=.2
+persistent=1
+[state 1026,スクロール]
+type=screenbound
+trigger1=1
+value=1;画面スクロールの影響を受けるか否か。0=受けない・1=受ける
+movecamera=0,1;カメラの動きをキャラに依存させるか否か。0=させない・1=させる（Ｘ軸,Ｙ軸）
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+[state 1028,アニメ変更]
+type=changeanim
+trigger1=1
+value=5007
+persistent=1
+[state 1028,相手ステートに戻す]
+type=selfstate
+trigger1=(vel y>0)&&(pos y>=0)
+value=5100
+;---------------------------------------------------------------------------
+; ※３：GetHitVar
+;
+; 　食らってしまった『相手の攻撃の効果』を
+; 　自分側が「特殊な変数」に変換して判断するトリガー。
+;　「GetHitVar(**)」の『**』に該当する、予め決められているパラメータを全て紹介。
+;
+; 　大概「相手のHitDefとProjectileのパラメータ」から引き出すので、かなり多い（苦笑
+;
+;
+; 　XVelAdd             = 自分が負けて吹っ飛んだ時の「Ｘ軸方向の加速度(float)」を計測する
+; 　YVelAdd             = 自分が負けて吹っ飛んだ時の「Ｙ軸方向の加速度(float)」を計測する
+; 　Type                = 自分の「食らいアニメの種類」。（0=None・1=High・2=Low・3=Trip）
+; 　AnimType            = 相手のHitDefに設定されている「animtype」を判断する
+;                        （0=Light・1=Medium・2=Hard・3=Back・4=Up・5=DiagUp）
+; 　GroundType          = 相手のHitDefに設定されている「ground.type」を判断する
+; 　AirType             = 相手のHitDefに設定されている「air.type」を判断する
+;
+; 　Damage              = 相手から食らってしまった「ダメージ量」を計測する
+; 　HitCount            = 相手の「現在のヒット数」を計測する
+; 　FallCount           = 自分が「地面に激突した回数」を判断する
+; 　HitShakeTime        = 自分の「ヒット硬直時間」を計測する
+; 　HitTime             = 自分の「食らい時間」を計測する
+; 　SlideTime           = 相手のHitDefに設定されている「slidetime」を判断する
+; 　CtrlTime            = 相手のHitDefに設定されている「(air)guard.ctrltime」を判断する
+; 　RecoverTime         = 横に倒れている時の「起き上がるまでの時間」を判断する
+;
+; 　XOff                = 相手のHitDefに設定されている「"snap"のＸ軸」を判断する（非推奨）
+; 　YOff                = 相手のHitDefに設定されている「"snap"のＹ軸」を判断する（非推奨）
+; 　ZOff                = 相手のHitDefに設定されている「"snap"のＺ軸」を判断する？（存在しないので無意味）
+;
+; 　XVel                = 相手のHitDefに設定されている「Ｘ軸の食らい状態の移動速度」を判断する
+; 　YVel                = 相手のHitDefに設定されている「Ｙ軸の食らい状態の移動速度」を判断する
+; 　YAccel              = 相手のHitDefに設定されている「yaccel」を判断する
+; 　chainID             = 相手のHitDefに設定されている「chainID」を判断する
+; 　Guarded             =「相手のコンボでの最後の攻撃をガードした場合」を判断する
+; 　IsBound             =「TargetBindで掴まれてる状態」を判断する
+;
+; 　Fall                = 相手のHitDefに設定されている「fall」を判断する
+; 　Fall.Damage         = 相手のHitDefに設定されている「fall.damage」を判断する
+; 　Fall.XVel           = 相手のHitDefに設定されている「fall.xvelocity」を判断する
+; 　Fall.YVel           = 相手のHitDefに設定されている「fall.yvelocity」を判断する
+; 　Fall.Recover        = 相手のHitDefに設定されている「fall.recover」を判断する
+; 　Fall.RecoverTime    = 相手のHitDefに設定されている「fall.recovertime」を判断する
+; 　Fall.Kill           = 相手のHitDefに設定されている「fall.kill」を判断する
+; 　Fall.EnvShake.Time  = 相手のHitDefに設定されている「fall.envshake.time」を判断する
+; 　Fall.EnvShake.Freq  = 相手のHitDefに設定されている「fall.envshake.freq」を判断する
+; 　Fall.EnvShake.Ampl  = 相手のHitDefに設定されている「fall.envshake.ampl」を判断する
+; 　Fall.EnvShake.Phase = 相手のHitDefに設定されている「fall.envshake.phase」を判断する
+;
+;===========================================================================
+;カンフースルー：相手側投げ抜け	 //
+;=================================
+[statedef 825]
+type=s
+movetype=i
+physics=s
+poweradd=30
+[state 820,相手ステートを変更]
+type=posset
+trigger1=1
+y=0
+[state 820,相手ステートを変更]
+type=velset
+trigger1=time<=3
+x=-7
+[state 820,相手のアニメ変更]
+type=changeanim2
+trigger1=time=0
+value=840
+[state 820,相手ステートに戻す]
+type=selfstate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;投げ失敗腹パン			 //
+;================================
+[statedef 850]
+type=s
+movetype=a
+physics=s
+poweradd=ceil(65*fvar(1))
+ctrl=0
+anim=850
+facep2=1
+sprpriority=4
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=movecontact=1
+triggerall=numtarget>=1
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.6
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.8
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=movecontact=1
+trigger1=numtarget>=1
+var(11)=3;◆ふつう
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 210,画像表示優先度]
+type=sprpriority
+trigger1=animelem=3
+value=2
+[state 195,声]
+type=playsnd
+trigger1=(random<=900)
+trigger1=animelem=1
+value=5,1+(random<=500)
+channel=0
+persistent=0
+[state 210,物理的なキャラの幅]
+type=width
+trigger1=(animelemtime(2)>=0)&&(animelemtime(7)<0)
+value=15,0;この場合キャラの幅を一時的に前に１５ピクセル伸ばす事になる。
+;値の意味は「前方のピクセル増減量,後方のピクセル増減量」
+[state 200,音を鳴らす]
+type=playsnd
+trigger1=animelem=2
+value=2,0
+[state 210,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,na
+animtype=hard
+damage=57
+guardflag=ma
+pausetime=25,25
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,1
+guardsound=s1,10
+ground.type=low
+ground.slidetime=20
+ground.hittime=10
+guard.ctrltime=24
+air.hittime=24
+fall.recovertime=24
+fall=0
+ground.velocity=-1,0
+air.velocity=-1,0
+yaccel=0.66
+p2facing=1
+id=850
+envshake.time=10
+envshake.freq=60
+envshake.ampl=10
+[state 610,位置調整用]
+type=projectile
+trigger1=movehit=1
+attr=s,ha
+damage=0,0
+getpower=0,0
+animtype=hard
+pausetime=0,25
+;-----------------------------------Projectile専用のパラメータ
+offset=-30,0;飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=850;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=2305;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+guardflag=-1
+hitflag=+maf
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=-1
+ground.type=low
+ground.slidetime=20
+ground.hittime=24
+guard.ctrltime=24
+air.hittime=24
+fall.recovertime=24
+fall=0
+;fall.recover = 1
+ground.velocity=-0.3,-1
+air.velocity=-0.3,-1
+yaccel=0.15
+id=850
+envshake.time=10
+envshake.freq=120
+envshake.ampl=10
+numhits=0
+snap=ceil(180*const(size.xscale)),ceil(-30*const(size.yscale))
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,通常ガードＥＦ]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=650
+postype=p1
+pos=ceil(130*const(size.xscale)),ceil(-145*const(size.yscale))
+facing=-1
+vfacing=1-(random>=500)*2
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=901
+id=850
+postype=p1
+pos=ceil(170*const(size.xscale)),ceil(-145*const(size.yscale))
+facing=1
+vfacing=1-(random>=500)*2
+scale=0.5*const(size.xscale),0.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=(animelemtime(5)<0)
+trigger1=movecontact=1
+value=850
+elem=5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state ,1200]
+type=posadd
+trigger1=(animelemtime(6)=0)
+x=ceil(67*const(size.xscale))
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,1200]
+type=velset
+trigger1=(animelemtime(6)=0)
+x=0
+persistent=0
+[state 220,コントロール]
+type=ctrlset
+trigger1=(animelemtime(22)>=0)
+value=1
+[state 210,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+; 特殊技
+;===========================================================================
+;===========================================================================
+;後退当身			 //
+;=================================
+[statedef 300]
+type=s
+movetype=i
+physics=s
+facep2=1
+anim=31
+ctrl=0
+sprpriority=2
+;---------------------[移動速度]
+[state 20,1]
+type=velset
+trigger1=anim=31
+x=const(velocity.walk.back.x)/(1+(animelemtime(15)<0))
+;---------------------[リバサ]
+[state 1000,]
+type=reversaldef
+trigger1=1
+reversal.attr=sca,aa,at
+attr=s,nt
+pausetime=0,0
+sparkno=-1
+parkxy=0,0
+hitsound=s1,6
+numhits=0
+p1stateno=305
+p2stateno=306
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;---------------------[解除アニメ]
+[state 1000,]
+type=changeanim
+triggerall=(anim=31)&&(animelemtime(15)>=0)
+trigger1=var(59)=0;★AIスイッチ
+trigger1=!((command="hold_a")||(command="hold_x"))
+trigger2=(fvar(0)>0)
+trigger3=time>=40
+value=23
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=(anim=31)&&(animelemtime(15)>=0)
+trigger1=var(59)
+trigger1=!inguarddist
+trigger2=(fvar(0)>0)
+trigger3=time>=40
+value=23
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 700,ステート変更];解除
+type=changestate
+trigger1=anim=23
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;当身投げ成功			 //
+;=================================
+[statedef 305]
+type=s
+movetype=a
+physics=n
+velset=0,0
+anim=1520
+poweradd=80
+;---------------------------------------------------------------------------
+;補正関連　　	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=time=0
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=time=0
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+[state 195,声]
+type=playsnd
+trigger1=time=0
+value=5,1505
+channel=0
+volume=200
+freqmul=1
+persistent=0
+[state -2,押し判定]
+type=playerpush
+trigger1=1
+value=0;相手を押さず、すり抜ける事が出来る
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state velset]
+type=posadd
+trigger1=time=0
+x=30
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state velset]
+type=posadd
+trigger1=time<=10
+x=-1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state -2,スプライト優先順位]
+type=sprpriority
+trigger1=animelemtime(8)<0
+value=1
+[state -2,スプライト優先順位]
+type=sprpriority
+trigger1=animelemtime(8)>=0
+value=3
+[state 810,音を鳴らす];掴み用
+type=playsnd
+trigger1=animelem=1
+channel=1
+value=1,6
+;volume = -128
+persistent=0
+[state 810,音を鳴らす];放り投げ用
+type=playsnd
+trigger1=animelem=7
+channel=2
+value=2,2
+volume=-128
+persistent=0
+[state 810,掴んだ相手の位置1];TargetBindで相手を一時的に拘束
+type=targetbind
+trigger1=animelemtime(2)<0
+pos=ceil(-35*const(size.xscale)),ceil(-145*const(size.yscale));自分の軸位置から相手の軸をX=28・Y=0の位置にする
+[state 810,掴んだ相手の位置2]
+type=targetbind
+trigger1=animelemtime(2)>=0
+trigger1=animelemtime(3)<0
+pos=ceil(-25*const(size.xscale)),ceil(-145*const(size.yscale))
+[state 810,掴んだ相手の位置3]
+type=targetbind
+trigger1=animelemtime(3)>=0
+trigger1=animelemtime(4)<0
+pos=ceil(-15*const(size.xscale)),ceil(-148*const(size.yscale))
+[state 810,掴んだ相手の位置4]
+type=targetbind
+trigger1=animelemtime(4)>=0
+trigger1=animelemtime(5)<0
+pos=ceil(2*const(size.xscale)),ceil(-155*const(size.yscale))
+[state 810,掴んだ相手の位置5]
+type=targetbind
+trigger1=animelemtime(5)>=0
+trigger1=animelemtime(6)<0
+pos=ceil(25*const(size.xscale)),ceil(-165*const(size.yscale))
+[state 810,掴んだ相手の位置6]
+type=targetbind
+trigger1=animelemtime(6)>=0
+trigger1=animelemtime(7)<0
+pos=ceil(65*const(size.xscale)),ceil(-185*const(size.yscale))
+[state 810,掴んだ相手の位置7]
+type=targetbind
+trigger1=animelemtime(7)>=0
+trigger1=animelemtime(8)<0
+pos=ceil(90*const(size.xscale)),ceil(-193*const(size.yscale))
+[state 810,掴んだ相手の位置8]
+type=targetbind
+trigger1=animelemtime(8)>=0
+trigger1=animelemtime(9)<0
+pos=ceil(100*const(size.xscale)),ceil(-195*const(size.yscale))
+[state 810,掴んだ相手の位置9]
+type=targetbind
+trigger1=animelemtime(9)>=0
+trigger1=animelemtime(10)<0
+pos=ceil(15*const(size.xscale)),ceil(-195*const(size.yscale))
+[state 810,掴んだ相手の位置10]
+type=targetbind
+trigger1=animelemtime(10)>=0
+trigger1=animelemtime(11)<0
+pos=ceil(-50*const(size.xscale)),ceil(-160*const(size.yscale))
+[state 810,掴んだ相手の位置11]
+type=targetbind
+trigger1=animelemtime(11)>=0
+trigger1=animelemtime(12)<0
+pos=ceil(-95*const(size.xscale)),ceil(-105*const(size.yscale))
+;/////////////////////////////////////////
+;演出用
+;叩きつけ演出テンプレ----------------------------------
+[state ,すごい地団駄];リング
+type=explod
+trigger1=animtime>=0
+anim=6510
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=-10
+ontop=0
+shadow=0,0,0
+trans=none;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];リング-フェード
+type=explod
+trigger1=animtime>=0
+anim=6511
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=-10
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];加算
+type=explod
+trigger1=animtime>=0
+anim=6500
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=1.5*const(size.xscale),1.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=3
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];リング前面
+type=explod
+trigger1=animtime>=0
+anim=6505
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=none;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];リング前面-フェード
+type=explod
+trigger1=animtime>=0
+anim=6506
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];破片
+type=explod
+trigger1=0;AnimElem = 29 
+anim=6520
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=(1+(random%10)/10)*const(size.xscale),(1+(random%10)/10)*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=2
+ontop=0
+shadow=0,0,0
+trans=none;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,すごい地団駄];破片
+type=explod
+trigger1=0;AnimTime >= 0 
+anim=6520
+id=1900
+postype=p1
+pos=(-60+ceil(-95*const(size.xscale))),0
+facing=1
+vfacing=1
+scale=(1+(random%10)/10)*const(size.xscale),(1+(random%5)/10)*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=none;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+;ここまで--------------------------------------
+[state 1000]
+type=envshake
+trigger1=animtime>=0
+freq=20
+ampl=10
+time=5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;通常投げ時のみ-----------------------------------
+[state 810,掴んだ相手のライフ増減]
+type=targetlifeadd
+trigger1=animtime>=0
+value=-78
+id=800
+[state 1000,]
+type=posadd
+trigger1=numtarget(800)=1
+x=ceil(30*const(size.xscale))
+persistent=0
+;--------------------------------------------------
+[state 1520,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=1525
+;===========================================================================
+;当身投げ：相手側１（掴まれて放り投げられるまで） //
+;==================================================
+[statedef 306]
+type=a
+movetype=h
+physics=n
+velset=0,0
+[state -2,押し判定]
+type=playerpush
+trigger1=1
+value=0;相手を押さず、すり抜ける事が出来る
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 820,相手のアニメ変更]
+type=changeanim2
+trigger1=gethitvar(isbound)
+value=1521
+pausemovetime=999999999999999999999999999999999999999
+supermovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state -2,スプライト優先順位]
+type=sprpriority
+trigger1=1
+value=2
+[state 810ヘルパー消し]
+type=destroyself
+trigger1=ishelper
+ignorehitpause=1
+[state 1000,0]
+type=screenbound
+trigger1=1
+value=0
+movecamera=0,0
+pausemovetime=999999999999999999999999999999999999999
+supermovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 820,ステート変更]
+type=changestate
+trigger1=!gethitvar(isbound)
+trigger1=time>5
+value=307
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+;===========================================================================
+; マッハ投げ床激突 (hit ground)	 //
+;=================================
+[statedef 307]
+type=l
+movetype=h
+physics=n
+[state 5100,1]
+type=velset
+trigger1=time=0
+trigger1=gethitvar(fall.yvel)=0
+trigger1=vel x>1
+x=1
+[state 5100]
+type=envshake
+trigger1=time=0
+time=7
+freq=80
+[state 5100,Var];Save fall velocity
+type=varset
+trigger1=time=0
+sysvar(1)=floor(vel y)
+[state 5100,2];Hit ground anim (normal)
+type=changeanim
+triggerall=time=0
+trigger1=(anim!=[5051,5059])&&(anim!=[5061,5069])
+trigger2=!selfanimexist(5100+(anim%10))
+value=5100
+[state 5100,3];Hit ground anim (for hit up)
+type=changeanim
+trigger1=time=0
+trigger1=(anim=[5051,5059])||(anim=[5061,5069])
+trigger1=selfanimexist(5100+(anim%10))
+value=5100+(anim%10)
+[state 5100,4]
+type=posadd
+trigger1=time=0
+x=60
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 5100,4]
+type=posset
+trigger1=time=0
+y=0
+[state 5100,5]
+type=velset
+trigger1=time=0
+y=0
+[state 5100,6];Reduce speed
+type=velmul
+trigger1=time=0
+x=0.75
+[state 5100,10]
+type=playsnd
+trigger1=time=1
+value=f7,2
+;value = 0,8
+volume=255
+[state 5100,7]
+type=changestate
+trigger1=time>=10
+trigger2=time>=5
+trigger2=animtime>=0
+value=1524;バウンド
+[state 5100,11]
+type=posfreeze
+trigger1=1
+[state 5100,12]
+type=selfstate
+trigger1=time>10
+value=5101
+[state 5100,13]
+type=forcefeedback
+trigger1=time=0
+waveform=sinesquare
+ampl=128,-3,-.2,.005
+time=20
+;===========================================================================
+;前進当身			 //
+;=================================
+[statedef 310]
+type=s
+movetype=i
+physics=s
+facep2=1
+anim=30
+ctrl=0
+sprpriority=2
+;---------------------[移動速度]
+[state 20,1]
+type=velset
+trigger1=anim=30
+x=const(velocity.walk.fwd.x)/(1+(animelemtime(10)<0))
+;---------------------[リバサ]
+[state 1000,]
+type=reversaldef
+trigger1=1
+reversal.attr=sca,aa
+attr=s,nt
+pausetime=0,0
+sparkno=-1
+parkxy=0,0
+hitsound=s1,6
+numhits=0
+p1stateno=1256
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state -2:喰らい上書き]
+type=hitoverride
+trigger1=anim=30
+trigger1=animelemtime(10)>=0
+slot=0
+attr=sca,aa,ap
+stateno=1256
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+;---------------------[解除アニメ]
+[state 1000,]
+type=changeanim
+triggerall=(anim=30)&&(animelemtime(10)>=0)
+trigger1=var(59)=0;★AIスイッチ
+trigger1=!((command="hold_y")||(command="hold_b"))
+trigger2=(fvar(1)>0)&&(fvar(0)>0)
+trigger3=time>=40
+value=22
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=(anim=30)&&(animelemtime(10)>=0)
+trigger1=var(59)
+trigger1=!inguarddist
+trigger2=(fvar(1)>0)&&(fvar(0)>0)
+trigger3=time>=40
+value=22
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 700,ステート変更];解除
+type=changestate
+trigger1=anim=22
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;正拳突き当身			 //
+;=================================
+[statedef 320]
+type=s
+movetype=i
+physics=s
+anim=32
+facep2=1
+ctrl=0
+sprpriority=2
+;---------------------[リバサ]
+[state 1000,]
+type=reversaldef
+trigger1=1
+reversal.attr=sca,aa
+pausetime=0,5
+sparkno=-1
+parkxy=0,0
+hitsound=s1,6
+numhits=0
+p1stateno=321
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state -2:喰らい上書き]
+type=hitoverride
+trigger1=animelemtime(6)>=0
+trigger1=animelemtime(16)<0
+slot=0
+attr=sca,aa
+stateno=321
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 700,ステート変更];解除
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;正拳当身成功			 //
+;=================================
+[statedef 321]
+type=s
+movetype=a
+physics=s
+facep2=1
+ctrl=0
+anim=33
+sprpriority=7
+;---------------------------------------------------------------------------
+;	       　　　　 /
+;-----------------------
+[state 195,声]
+type=playsnd
+trigger1=time=0
+;Trigger1 = animelem = 1
+value=5,1500
+channel=0
+volume=250
+freqmul=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=time=0
+anim=34
+id=320
+postype=p1
+pos=ceil(50*const(size.xscale)),ceil(-165*const(size.yscale))
+facing=1
+vfacing=1
+scale=1.5*const(size.xscale),1.5*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=0
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 3000,最大溜め暗転時間停止]
+type=superpause
+trigger1=time=0
+anim=-1;超必エフェクトのアクションナンバー。通常は「fightfx.air」のアニメを使うが、
+;左に「s」を付ければ「自分のairファイル」のアクションナンバーが使える。
+pos=25,-57;超必エフェクトの座標（Ｘ軸,Ｙ軸）
+sound=-1;超必発動サウンド。通常は「common.snd」の音を使うが、
+;左に「s」を付ければ「自分のsndファイル」の音が使える。
+poweradd=0;パワーゲージ増減量
+time=20;ポーズする時間（フレーム）
+movetime=0;ポーズ中に動ける時間。timeよりも多いとバグる（デフォルトは０）
+darken=0;ポーズ中画面を暗転するか否か（0=しない・1=する）
+;暗転する色は「ownpal」の有無により「Explod」や「ヘルパー」にも影響するので注意。
+;p2defmul = 1  ;直前のステートを「SuperPauseを設置したステート」でキャンセルした場合、
+;『相手に一時的に与える防御力乗算値(float)』。
+;デフォルトは０。（相手の防御力が上がり、ダメージ量に下方修正が掛かる）
+;１にすれば『ダメージ補正が掛からなくなる』事になる。
+;相手が食らい状態以外（相手のMoveTypeが「H」以外）になれば解除される。
+unhittable=1;ポーズ中自分を無敵状態にするか否か（0=しない・1=する）
+;デフォルトは１。
+persistent=0
+;---------------------[攻撃判定]
+[state 1310,ヒット定義]
+type=hitdef
+trigger1=(movecontact=0)&&(movereversed=0)
+attr=s,sa
+animtype=back
+damage=0,0
+priority=5,hit
+getpower=ceil(98*fvar(1)),28
+guardflag=ma
+pausetime=12,12
+sparkxy=-12,-90
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,5
+guardsound=s1,11
+ground.type=high
+ground.slidetime=25
+ground.hittime=25
+guard.ctrltime=25
+ground.velocity=-8,-6
+air.velocity=-8,-3
+air.hittime=25
+yaccel=0.4
+fall=1
+fall.recover=0
+p2facing=1
+envshake.time=10
+envshake.freq=90
+envshake.ampl=10
+id=320
+persistent=0
+[state 1000,相手ステート制御]
+type=targetstate
+trigger1=var(10)<=1
+trigger1=numtarget(320)!=0
+trigger1=(movehit=1)
+value=1704
+id=320
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+;ヒットスパーク記述
+[state ,ガードＥＦ]
+type=explod
+trigger1=moveguarded=1
+anim=6005
+id=1200
+postype=p1
+pos=ceil(150*const(size.xscale)),ceil(-160*const(size.yscale))
+facing=-1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,通常ヒットＥＦ]
+type=explod
+trigger1=movehit=1
+anim=6010
+id=1200
+postype=p1
+pos=ceil(150*const(size.xscale)),ceil(-160*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;/////////////////////////////////////////
+[state -2,気合ゲージ回復]
+type=varset
+trigger1=movehit=1
+fvar(1)=fvar(3)
+ignorehitpause=1
+persistent=1
+[state -2,気合ゲージ回復]
+type=varset
+trigger1=movehit=1
+fvar(0)=fvar(3)
+ignorehitpause=1
+persistent=1
+[state 195,根性カウント]
+type=varadd
+trigger1=movehit=1
+trigger1=var(40)<10
+var(40)=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------[ヒット時振り切り]
+[state ,1200]
+type=changeanim
+trigger1=movecontact=1
+value=33
+elem=4
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state ,1200]
+type=changeanim
+trigger1=movecontact>1
+value=33
+elem=33
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 1220,物理的なキャラの幅]
+type=width
+trigger1=movecontact=1
+value=ceil(130*const(size.xscale)),0
+[state 950,コントロール]
+type=ctrlset
+trigger1=animelemtime(57)>=0
+value=1
+[state 700,ステート変更]
+type=changestate
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;ゲージ溜め	       //
+;=======================
+[statedef 700]
+type=s
+movetype=i
+physics=s
+anim=700
+ctrl=0
+velset=0,0
+sprpriority=2
+;---------------------[演出用エフェクト]
+[state ,開始];紅
+type=explod
+trigger1=(anim=700)&&(animelemtime(10)=0)
+trigger1=fvar(0)<fvar(3)
+anim=705
+id=705
+postype=p1
+pos=-5,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,開始];青
+type=explod
+trigger1=(anim=700)&&(animelemtime(10)=0)
+trigger1=fvar(0)=fvar(3)
+anim=708
+id=708
+postype=p1
+pos=-5,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,メイン];紅
+type=explod
+trigger1=(anim=700)&&(time>=29)
+trigger1=fvar(0)<fvar(3)
+anim=706
+id=706
+postype=p1
+pos=-5,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-1
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state ,メイン];青
+type=explod
+trigger1=(anim=700)&&(time>=29)
+trigger1=fvar(0)=fvar(3)
+anim=709
+id=709
+postype=p1
+pos=-5,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-1
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+persistent=0
+[state 1000]
+type=envshake
+triggerall=numexplod(709)!=0
+trigger1=numexplod(706)!=0
+freq=90
+ampl=10
+time=5
+persistent=0
+[state 195,音を鳴らす]
+type=playsnd
+triggerall=numexplod(709)!=0
+trigger1=numexplod(706)!=0
+value=4,3
+persistent=0
+[state 195,音を鳴らす]
+type=playsnd
+triggerall=anim=700
+trigger1=animelemtime(19)=0
+channel=2
+value=2,1000
+persistent=1
+[state 195,声]
+type=playsnd
+triggerall=anim=700
+trigger1=animelemtime(19)=0
+value=5,1000
+channel=0
+persistent=0
+[state 195,音をstop]
+type=stopsnd
+trigger1=anim!=700
+channel=2
+persistent=0
+[state 195,音をstop]
+type=stopsnd
+trigger1=anim!=700
+channel=0
+persistent=0
+[state -2,消す];紅
+type=removeexplod
+trigger1=numexplod(709)!=0
+id=706
+[state -2,根性ゲージ回復]
+type=varadd
+triggerall=(anim=700)
+trigger1=fvar(0)<fvar(3)
+fvar(0)=(fvar(3)/120)*(1+(var(40)*0.3)+(var(40)=10)*3)/(1+(animelemtime(15)<0))
+ignorehitpause=1
+persistent=1
+[state -2,ゲージ溜め]
+type=poweradd
+triggerall=(anim=700)
+trigger1=fvar(0)>=fvar(3)
+trigger1=ceil((3+ceil(time/60))*(1+(var(40)*0.1))/(1+(animelemtime(15)<0)))<50
+value=ceil((3+ceil(time/60))*(1+(var(40)*0.1)+(var(40)=10))/(1+(animelemtime(15)<0)))
+ignorehitpause=1
+persistent=1
+[state -2,ゲージ溜め];▲セーフティ
+type=poweradd
+triggerall=(anim=700)
+trigger1=fvar(1)>=fvar(3)
+trigger1=fvar(0)>=fvar(3)
+trigger1=ceil((3+ceil(time/60))*(1+(var(40)*0.1)+(var(40)=10))/(1+(animelemtime(15)<0)))>=50
+value=50
+ignorehitpause=1
+persistent=1
+;---------------------[解除アニメ]
+[state 1000,]
+type=changeanim
+triggerall=(roundstate!=2)||(var(59)=0);★AIスイッチ
+triggerall=(anim=700)&&(animelemtime(20)>=0)
+trigger1=command!="hold_c"
+value=701
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state -1,AIゲージ溜め解除]
+type=changeanim
+value=701
+triggerall=(roundstate=2)&&(var(59)!=0)&&(alive=1)||roundstate!=2&&var(59)
+triggerall=stateno=700
+triggerall=(anim=700)&&(animelemtime(20)>=0)
+triggerall=var(2)=0
+trigger1=p2movetype=a&&p2bodydist x<=150
+trigger2=(enemy(var(0)),vel x)>(enemy(var(0)),const(velocity.walk.fwd.x))
+trigger2=p2movetype!=h
+trigger3=(150-p2dist x)*10>=random
+trigger3=gametime%10=0
+trigger3=p2movetype!=h
+trigger4=((fvar(1)+fvar(0))/fvar(3)*10)>random
+trigger4=gametime%20=random%20
+trigger4=p2movetype!=h
+trigger5=(fvar(1)+fvar(0))/fvar(3)>=2
+trigger5=gametime%(5+var(40))=random%(5+var(40))||(power*1.0/powermax*1.0=1)
+trigger5=(power/(50+(5*var(40)))>=random)||(power*1.0/powermax*1.0=1)
+trigger6=(enemy(var(0)),vel x>0)&&(inguarddist)
+trigger7=(inguarddist)
+trigger8=(enemy(var(0)),vel y)<0
+trigger8=p2movetype!=h
+trigger9=enemy(var(0)),ctrl&&p2dist x<0
+trigger10=enemy(var(0)),ctrl=0&&p2dist x<0
+trigger10=!p2bodydist y||p2stateno=5120
+trigger11=p2bodydist x=[-100,100]
+trigger11=p2stateno=5120
+trigger12=inguarddist&&var(56)&&var(57)
+trigger13=p2movetype=a&&enemy(var(0)),time>30
+trigger14=power>=powermax&&fvar(0)>=fvar(3)
+trigger15=enemy(var(0)),hitdefattr=sca,at
+trigger16=p2stateno=5120&&enemy(var(0)),animtime>-5
+trigger17=(p2bodydist x=[-50,120])&&enemy(var(0)),ctrl
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state -1,AIゲージ溜め解除];万が一の防止
+type=changeanim
+value=701
+triggerall=(roundstate=2)&&(var(59)!=0)&&(alive=1)||roundstate!=2&&var(59)
+triggerall=stateno=700
+triggerall=(anim=700)&&(animelemtime(20)>=0)
+trigger1=numexplod(5)!=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 700,ステート変更];解除
+type=changestate
+trigger1=anim=701
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;すごいガード	       //
+;=======================
+[statedef 900]
+type=u
+movetype=a
+physics=n
+ctrl=0
+sprpriority=2
+;---------------------------------------------------------------------------
+;特殊ゲージ消費　　　　 /
+;-----------------------
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-10;◆固定数値減算
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性切れペナ]
+type=varset
+trigger1=time=0
+trigger1=numhelper(7)>=1
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,赤点滅]
+type=palfx
+triggerall=time<20
+triggerall=time%6>1
+trigger1=anim=1800
+trigger2=anim=1820
+time=1
+add=220,10,10
+mul=255,255,255
+sinadd=0,0,0,10
+invertall=0
+color=255
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+;----------------------
+;	       　　　　 ＼
+;---------------------------------------------------------------------------
+[state 1000,]
+type=changeanim
+trigger1=time=0
+value=1800+(statetype=a)*20
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=reversaldef
+trigger1=anim=1800
+trigger2=anim=1820
+reversal.attr=sa,na,sa
+pausetime=0,0
+sparkno=-1
+parkxy=0,0
+hitsound=-1
+p1stateno=950
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state -2:喰らい上書き]
+type=hitoverride
+trigger1=anim=1800
+trigger2=anim=1820
+slot=0
+attr=sca,aa,ap,at
+stateno=950
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state velset]
+type=statetypeset
+trigger1=pos y>=0
+trigger1=statetype=a
+statetype=s
+movetype=i
+physics=s
+[state 1000,]
+type=changeanim
+triggerall=pos y>=0
+trigger1=anim=1820
+value=1800
+elem=10
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=pos y>=0
+trigger1=anim=1825
+value=1805
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state velset]
+type=velset
+trigger1=anim=1800
+trigger2=anim=1805
+y=0
+[state 着地]
+type=posset
+trigger1=anim=1800
+trigger2=anim=1805
+y=0
+persistent=1
+[state velset]
+type=velset
+trigger1=statetype!=a
+x=0
+[state veladd];重力
+type=veladd
+trigger1=statetype=a
+y=0.66
+[state 1000,]
+type=changeanim
+triggerall=anim=1800
+trigger1=fvar(0)<0
+trigger2=time>=20
+value=1805
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=anim=1820
+trigger1=fvar(0)<0
+trigger2=time>=20
+value=1825
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 950,コントロール]
+type=ctrlset
+trigger1=animelemtime(5)>=0
+trigger1=anim=1805
+trigger2=animelemtime(10)>=0
+trigger2=anim=1825
+value=1
+[state 1000,]
+type=changeanim
+triggerall=var(40)>=1
+triggerall=((command="hold_z")&&(var(59)=0))||((var(59)&&((p2life*1.0/enemy(var(0)),lifemax*1.0)<=0.3)&&(fvar(0)>=(fvar(3)*70/100))&&(var(40)=[5,10+1*(roundno>1)]))||(var(59)&&palno=12))
+triggerall=((command="hold_z")&&(var(59)=0))||(var(59)&&(numenemy=1&&p2life>=30||(numenemy>1&&((enemy(0),life!=[29,1])&&(enemy(numenemy>1),life!=[29,1])))))
+triggerall=((command="hold_z")&&(var(59)=0))||(var(59)&&!((var(56)&&helper(21000),var(1))||(enemy(var(0)),hitdefattr=sca,aa,at,ap&&p2bodydist x<100)||(gametime>helper(21000),var(3)+40)))
+triggerall=((command="hold_z")&&(var(59)=0))||(var(59)&&(enemy(var(0)),numproj<2&&(enemy(var(0)),numhelper-helper(21000),var(2))<2))
+triggerall=var(59)=0||(var(59)&&animelemno(0)=4)
+trigger1=anim=1805
+value=1805
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=1
+[state -2,根性アーマー移行]
+type=changestate
+triggerall=var(40)>=1
+triggerall=((command="hold_z")&&(var(59)=0))||(var(59)>0)
+triggerall=time>=40
+trigger1=anim=1800
+trigger2=anim=1805
+value=910
+[state 800,ステート変更]
+type=changestate
+trigger1=anim=1805
+trigger1=animtime>=0
+value=0
+ctrl=1
+[state 800,ステート変更]
+type=changestate
+trigger1=anim=1825
+trigger1=animtime>=0
+value=50
+ctrl=1
+;===========================================================================
+;根性アーマー展開       //
+;=======================
+[statedef 910]
+type=s
+movetype=i
+physics=s
+anim=700
+ctrl=0
+facep2=1
+sprpriority=2
+;---------------------------------------------------------------------------
+;アーマー状態フラグ　　　　 /
+;---------------------------
+[state 7]
+type=explod
+trigger1=numexplod(5)=0
+trigger1=(var(2):=5)
+anim=4
+id=5
+postype=p1
+pos=0,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+;-----------------------
+;	       　　　　  ＼
+;---------------------------------------------------------------------------
+[state 3000,最大溜め暗転時間停止]
+type=superpause
+trigger1=time=0
+anim=-1;超必エフェクトのアクションナンバー。通常は「fightfx.air」のアニメを使うが、
+;左に「s」を付ければ「自分のairファイル」のアクションナンバーが使える。
+pos=25,-57;超必エフェクトの座標（Ｘ軸,Ｙ軸）
+sound=-1;超必発動サウンド。通常は「common.snd」の音を使うが、
+;左に「s」を付ければ「自分のsndファイル」の音が使える。
+poweradd=0;パワーゲージ増減量
+time=30;ポーズする時間（フレーム）
+movetime=10;ポーズ中に動ける時間。timeよりも多いとバグる（デフォルトは０）
+darken=1;ポーズ中画面を暗転するか否か（0=しない・1=する）
+;暗転する色は「ownpal」の有無により「Explod」や「ヘルパー」にも影響するので注意。
+;p2defmul = 1.0  ;直前のステートを「SuperPauseを設置したステート」でキャンセルした場合、
+;『相手に一時的に与える防御力乗算値(float)』。
+;デフォルトは０。（相手の防御力が上がり、ダメージ量に下方修正が掛かる）
+;１にすれば『ダメージ補正が掛からなくなる』事になる。
+;相手が食らい状態以外（相手のMoveTypeが「H」以外）になれば解除される。
+unhittable=1;ポーズ中自分を無敵状態にするか否か（0=しない・1=する）
+;デフォルトは１。
+persistent=0
+;---------------------[演出用エフェクト]
+[state 3000,最大溜めエフェ]
+type=explod
+trigger1=(anim=700)&&(animelemtime(1)=0)
+anim=8000
+id=2200
+postype=p1
+pos=ceil(30*const(size.xscale)),ceil(-182*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=changeanim
+trigger1=anim=700
+trigger1=animelemtime(10)<0
+value=700
+elem=10
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 1000,ゲージ技発動音]
+type=playsnd
+trigger1=(anim=700)&&(animelemtime(15)=0)
+channel=4
+value=4,0
+;volume = -128
+persistent=0
+[state 195,声]
+type=playsnd
+trigger1=(anim=700)&&(animelemtime(17)=0)
+;Trigger1 = animelem = 1
+value=5,1500
+channel=0
+volume=250
+freqmul=1
+persistent=0
+[state 3000,蒼炎エフェ1]
+type=explod
+trigger1=(anim=700)&&(animelemtime(17)=0)
+anim=2200
+id=2200
+postype=p1
+pos=ceil(10*const(size.xscale)),ceil(-100*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 3000,蒼炎エフェ2]
+type=explod
+trigger1=(anim=700)&&(animelemtime(17)=0)
+anim=2205
+id=2200
+postype=p1
+pos=ceil(10*const(size.xscale)),ceil(-60*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-2
+removeongethit=1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------[無敵の状態を作る]
+[state 1250]
+type=nothitby
+trigger1=(anim=700)&&(animelemtime(30)<=0)
+value2=sca
+supermovetime=999999999999
+pausemovetime=999999999999
+[state 1000,収束音]
+type=playsnd
+trigger1=(anim=700)&&(animelemtime(17)=0)
+channel=2
+value=2,2200
+persistent=0
+[state 1000]
+type=envshake
+trigger1=(anim=700)&&(animelemtime(16)>1)
+freq=90
+ampl=10
+time=5
+supermovetime=999999999999
+pausemovetime=999999999999
+persistent=0
+;---------------------[解除アニメ]
+[state 1000,]
+type=changeanim
+trigger1=(anim=700)&&(animelemtime(30)>=0)
+value=701
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 200,コントロール]
+type=ctrlset
+trigger1=(anim=700)&&(animelemtime(17)>0)
+trigger2=(anim=701)
+value=1
+[state 700,ステート変更]
+type=changestate
+trigger1=anim=701
+trigger1=animtime>=0
+value=0
+ctrl=1
+;===========================================================================
+;すごいガード成功      //
+;=======================
+[statedef 950]
+type=u
+movetype=i
+physics=n
+velset=0,0
+poweradd=120
+anim=1830
+ctrl=0
+sprpriority=2
+;---------------------------------------------------------------------------
+;攻撃力補正	　　　　 /
+;------------------------
+[state -2,コンボ補正]
+type=null
+triggerall=numtarget(950)!=0
+trigger1=fvar(1)=1;▲初撃補正
+trigger1=fvar(1):=0.5
+trigger2=fvar(1)<1;▲連撃補正
+trigger2=fvar(1):=fvar(1)*0.5
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,補正ランクセット]
+type=varset
+trigger1=var(11)=0
+trigger1=numtarget(950)!=0
+var(11)=5;◆きつい
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+;根性ゲージ消費　　　　 /
+;-----------------------
+[state -2,根性切れ]
+type=varset
+trigger1=(fvar(0)<=0)&&(helper(7),numexplod(7100)!=0)
+fvar(0)=-fvar(3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state -2,根性消費]
+type=varadd
+trigger1=time=0
+fvar(0)=-(fvar(3)/20)/(1+numexplod(900)*0.3)
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------------------------------------------------------------
+[state 195,声]
+type=playsnd
+trigger1=animelem=1
+value=5,900
+channel=0
+volume=250
+freqmul=1.1
+lowpriority=1;連続で鳴らないように
+persistent=0
+;---------------------[演出用エフェクト]
+[state ,PA]
+type=explod
+trigger1=var(1)=0
+anim=1850
+id=900
+postype=p1
+pos=ceil(125*const(size.xscale)),ceil(-125*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.9*const(size.xscale),0.9*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,1紫]
+type=explod
+trigger1=var(1)=1
+anim=6800
+id=900
+postype=p1
+pos=-30,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,2群青]
+type=explod
+trigger1=var(1)=1
+anim=6810
+id=950
+postype=p1
+pos=-20,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,3水色]
+type=explod
+trigger1=var(1)=1
+anim=6820
+id=950
+postype=p1
+pos=-10,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,4緑]
+type=explod
+trigger1=var(1)=1
+anim=6830
+id=950
+postype=p1
+pos=0,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,5黄色]
+type=explod
+trigger1=var(1)=1
+anim=6840
+id=950
+postype=p1
+pos=10,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,6橙]
+type=explod
+trigger1=var(1)=1
+anim=6850
+id=950
+postype=p1
+pos=20,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state ,7赤]
+type=explod
+trigger1=var(1)=1
+anim=6860
+id=950
+postype=p1
+pos=30,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 1000]
+type=envshake
+trigger1=var(1)=1
+freq=90
+ampl=5
+time=10
+persistent=0
+[state 195,音を鳴らす]
+type=playsnd
+trigger1=var(1)=0
+value=4,3
+persistent=0
+[state 195,音を鳴らす]
+type=playsnd
+trigger1=var(1)=1
+value=2,195
+lowpriority=1;連続で鳴らないように
+persistent=0
+[state 610,空中用]
+type=projectile
+trigger1=time<=5
+attr=s,nt;立ち必殺飛び道具（Standing, Special Projectile）
+damage=0,0
+getpower=100,10
+animtype=hard
+pausetime=0,5
+;-----------------------------------Projectile専用のパラメータ
+offset=ceil(-50*const(size.xscale)),ceil(-120*const(size.yscale));飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=950;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=505;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+hitflag=-af
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,8
+guardsound=s1,10
+ground.type=low
+ground.slidetime=24
+ground.hittime=120
+ground.velocity=-5,-8
+air.velocity=-5,-8
+air.hittime=120
+yaccel=.66
+p2facing=1
+fall=1
+fall.recover=0
+p2stateno=960
+id=950
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+[state 610,地上用]
+type=projectile
+trigger1=time<=5
+attr=s,nt;立ち必殺飛び道具（Standing, Special Projectile）
+damage=0,0
+getpower=100,10
+animtype=hard
+pausetime=0,5
+;-----------------------------------Projectile専用のパラメータ
+offset=ceil(-50*const(size.xscale)),ceil(-120*const(size.yscale));飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=950;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=505;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+hitflag=-m
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=s1,8
+guardsound=s1,10
+ground.type=low
+ground.slidetime=15
+ground.hittime=20
+ground.velocity=-15,0
+air.velocity=-5,-8
+air.hittime=120
+yaccel=.66
+p2facing=1
+id=950
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=0
+;---------------------[アニメ変更]
+[state 1000,]
+type=changeanim
+trigger1=time=0
+value=1810+(statetype=a)*20
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;---------------------[1Fだけ無敵の状態を作る]
+[state 1250]
+type=nothitby
+trigger1=1
+value2=sca,aa,ap,at
+time=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=reversaldef
+trigger1=time>1
+reversal.attr=sca,aa,ap,at
+pausetime=0,0
+sparkno=-1
+parkxy=0,0
+hitsound=-1
+p1stateno=950
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+[state -2:地上]
+type=hitoverride
+trigger1=1
+slot=0
+attr=sca,aa,ap,at
+stateno=950
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state velset]
+type=statetypeset
+trigger1=statetype=a
+trigger1=pos y>=0
+statetype=s
+movetype=i
+physics=s
+[state 1000,]
+type=changeanim
+triggerall=pos y>=0
+trigger1=anim=1830
+value=1810
+elem=13
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=pos y>=0
+trigger1=anim=1825
+value=1805
+elem=ceil(animelemno(0)/2)
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=0
+[state velset]
+type=velset
+trigger1=anim=1810
+trigger2=anim=1805
+y=0
+[state 着地]
+type=posset
+trigger1=anim=1810
+trigger2=anim=1805
+y=0
+persistent=1
+[state ,静止]
+type=posfreeze
+trigger1=anim=1830
+trigger1=(animelemtime(8)<0)
+value=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+[state velset]
+type=velset
+trigger1=statetype!=a
+x=0
+[state veladd];重力
+type=veladd
+triggerall=statetype=a
+trigger1=(animelemtime(11)>=0)
+y=0.66
+[state 1000,]
+type=changeanim
+triggerall=anim=1810
+trigger1=fvar(0)<0
+trigger2=animtime>=0
+value=1805
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 1000,]
+type=changeanim
+triggerall=anim=1830
+trigger1=fvar(0)<0
+trigger2=animtime>=0
+value=1825
+elem=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+persistent=0
+[state 950,コントロール]
+type=ctrlset
+trigger1=animelemtime(5)>=0
+trigger1=anim=1805
+trigger2=animelemtime(10)>=0
+trigger2=anim=1825
+value=1
+[state 800,ステート変更]
+type=changestate
+trigger1=anim=1805
+trigger1=animtime>=0
+value=0
+ctrl=1
+[state 800,ステート変更]
+type=changestate
+trigger1=anim=1825
+trigger1=animtime>=0
+value=50
+ctrl=1
+;===============================================================
+;ごく普通にダウン1　 //
+;====================
+[statedef 960]
+type=a
+movetype=h
+physics=n
+velset=0,0
+[state 7念のためDestroySelf]
+type=destroyself
+trigger1=ishelper
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 5020,1];Anim for HIT_LIGHT to HIT_HARD
+type=changeanim
+trigger1=time=0
+trigger1=gethitvar(animtype)!=[3,5]
+value=ifelse((gethitvar(airtype)=1),5000,5010)+gethitvar(animtype)
+[state 5020,2];Anim for HIT_BACK
+type=changeanim
+trigger1=time=0
+trigger1=gethitvar(animtype)=[3,5]
+value=5030
+[state 5020,3];Anim for HIT_UP/HIT_DIAGUP (only if it exists)
+type=changeanim
+trigger1=time=0
+trigger1=(gethitvar(animtype)=[4,5])&&(selfanimexist(5047+gethitvar(animtype)))
+value=5047+gethitvar(animtype)
+[state 5020,4];Freeze anim
+type=changeanim
+trigger1=time>0
+value=anim
+[state 1025,ステート変更]
+type=changestate
+trigger1=hitshakeover=1;ヒット硬直が解けたら
+value=965
+pausemovetime=999999999999999999999999999999999999999
+[state 5020,FFBLight]
+type=forcefeedback
+trigger1=anim=5000
+trigger2=anim=5010
+persistent=0
+time=6
+waveform=square
+[state 5020,FFBMedium]
+type=forcefeedback
+trigger1=anim=5001
+trigger2=anim=5011
+persistent=0
+time=8
+waveform=sinesquare
+ampl=110,-1,-.3
+[state 5020,FFBHard]
+type=forcefeedback
+trigger1=anim=5012
+trigger2=anim=5002
+trigger3=anim=5030
+trigger4=anim=[5051,5059]
+persistent=0
+time=15
+waveform=sinesquare
+ampl=140
+;===============================================================
+;ごく普通にダウン2　 //
+;====================
+[statedef 965]
+type=a
+movetype=h
+physics=n
+ctrl=0
+[state 5035,1]
+type=changeanim
+trigger1=vel y>0
+trigger1=selfanimexist(5061)
+trigger1=anim=5051
+value=5061
+[state 5035,1]
+type=changeanim
+trigger1=animtime=0
+trigger1=selfanimexist(5035)
+trigger1=anim!=[5051,5059];Not if in hit up anim
+trigger1=anim!=5090;Not if hit off ground anim
+value=5035
+persistent=0
+[state 5035,1]
+type=changeanim
+trigger1=vel y>0
+trigger1=selfanimexist(5050)
+trigger1=anim=5035
+value=5050
+persistent=0
+[state 5035,1]
+type=changeanim
+trigger1=vel y>0
+trigger1=selfanimexist(5061)
+trigger1=anim=5051
+value=5061
+persistent=0
+[state 1028,速度加算];重力
+type=veladd
+trigger1=gethitvar(yaccel)>0
+y=gethitvar(yaccel)
+[state 1028,速度加算];重力
+type=veladd
+trigger1=gethitvar(yaccel)<=0
+y=0.4
+[state 5030,2]
+type=hitvelset
+trigger1=time=0
+x=1
+y=1
+[state 1028,1]
+type=changestate
+trigger1=time>0
+trigger1=vel y>0
+trigger1=pos y>=20
+value=970
+;===============================================================
+;ごく普通にダウン3　 //
+;====================
+[statedef 970]
+type=a
+movetype=h
+physics=n
+[state 5100,1]
+type=velset
+trigger1=time=0
+trigger1=gethitvar(fall.yvel)=0
+trigger1=vel x>1
+x=1
+[state 5100,EnvShake]
+type=fallenvshake
+trigger1=time=0
+[state 5100,Var];Save fall velocity
+type=varset
+trigger1=time=0
+sysvar(1)=floor(vel y)
+[state 5100,2];Hit ground anim (normal)
+type=changeanim
+triggerall=time=0
+trigger1=(anim!=[5051,5059])&&(anim!=[5061,5069])
+trigger2=!selfanimexist(5100+(anim%10))
+value=5100
+[state 5100,3];Hit ground anim (for hit up)
+type=changeanim
+trigger1=time=0
+trigger1=(anim=[5051,5059])||(anim=[5061,5069])
+trigger1=selfanimexist(5100+(anim%10))
+value=5100+(anim%10)
+[state 5100,4]
+type=posset
+trigger1=time=0
+y=0
+[state 5100,5]
+type=velset
+trigger1=time=0
+y=0
+[state 5100,6];Reduce speed
+type=velmul
+trigger1=time=0
+x=0.75
+[state 5100,8]
+type=gamemakeanim
+trigger1=time=1
+value=60+(sysvar(1)>5)+(sysvar(1)>14)
+pos=0,0
+under=sysvar(1)<=14
+[state 5100,9]
+type=hitfalldamage
+trigger1=time=0
+[state 5100,10]
+type=playsnd
+trigger1=time=1
+value=f7,(sysvar(1)>5)+(sysvar(1)>14)
+[state 5100,11]
+type=posfreeze
+trigger1=1
+[state 5100,12]
+type=changestate
+trigger1=animtime=0
+value=1381
+[state 5100,13]
+type=forcefeedback
+trigger1=time=0
+waveform=sinesquare
+ampl=128,-3,-.2,.005
+time=20

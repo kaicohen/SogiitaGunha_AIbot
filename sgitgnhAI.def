@@ -1,0 +1,43 @@
+[Info]
+name = "Sogiita Gunha"        ;Name of character
+displayname = "Gunha" ;Name of character to display
+versiondate = 8,7,2014    ;Version date of character (MM-DD-YYYY or X.XX)
+mugenversion = 1.0          ;Version of M.U.G.E.N character works on (X.XX)
+author = "fugaku"         ;Character author name
+pal.defaults = 1     ;Default palettes in order of preference (up to 4)
+                            ;Numbering starts from 1
+localcoord = 320,240        ;Local coordinate space width and height
+
+; Files for the player
+[Files]
+
+cmd     = sgitgnhAI/sgitgnh.cmd           ;Command set
+;cmd     = sgitgnh-AI.cmd           ;簡易AI起動
+cns     = sgitgnhAI/sgitgnhcons.cns           ;コンスタンツ
+st      = sgitgnhAI/sgitgnhcommon.cns         ;基本動作
+St0     = sgitgnhAI/sgitgnh1.cns     ;通常攻撃
+St1     = sgitgnhAI/sgitgnh2.cns     ;必殺技
+St2     = sgitgnhAI/sgitgnh3.cns     ;超必殺技
+St3     = sgitgnhAI/sgitgnh-helper.cns   ;ヘルパーステート
+St4     = sgitgnhAI/sgitgnh-2.cns    ;-2,-3ステート
+stcommon = common1.cns      ;Common states (from data/ or motif)
+sprite  = sgitgnh.sff           ;Sprite
+anim    = sgitgnh.air           ;Animation
+;sound   = sgitgnh.snd           ;声無し
+sound   = sgitgnh-voice.snd           ;声あり
+
+;★ごく普通　基本の状態
+pal1    = pal1.act 
+pal2    = pal1.act 
+pal3    = pal1.act 
+pal4    = pal1.act 
+pal5    = pal1.act 
+pal6    = pal1.act 
+
+;★特殊効果付き
+pal7    = pal1.act ;★根性ゲージ常時MAX
+pal8    = pal1.act ;★根性カウントMAX
+pal9    = pal1.act ;★根性ゲージ + 根性カウント　常時MAX
+pal10    = pal1.act ;★根性ゲージ + 通常ゲージ　常時MAX
+pal11    = pal1.act ;★根性カウント + 通常ゲージ　常時MAX
+pal12    = pal1.act ;★根性ゲージ + 根性カウント + 通常ゲージ　常時MAX

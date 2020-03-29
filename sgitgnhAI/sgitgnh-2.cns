@@ -1,0 +1,1635 @@
+;===========================================================================
+; 常時監視ステート（－２）
+;===========================================================================
+;---------------------------------------------------------------------------
+; 通常の食らい状態（Statedef 5000～5199間）でも、
+; 相手に（「P2StateNo」や「TargetState」等で）制御を奪われても、
+; 常に登録したステートコントローラが有効になります。
+; サブシステム等を制御する時に重宝するでしょう。
+;---------------------------------------------------------------------------
+[statedef -2]
+;===========================================================================
+;設定用変数セット記述
+;===========================================================================
+;---------------------------------------------------------------------------
+;気合と根性ゲージセット /
+;-----------------------
+[state -2,根性ゲージ最大値]
+type=varset
+trigger1=1
+fvar(3)=(50);( )内の数値を1以上で設定します
+[state -2,根性ゲージX軸位置調整]
+type=varset
+trigger1=1
+var(3)=(0);( )内の数値を好みで設定します 
+[state -2,根性ゲージY軸位置調整]
+type=varset
+trigger1=1
+var(4)=(0);( )内の数値を好みで設定します
+[state -2,根性カウントX軸位置調整]
+type=varset
+trigger1=1
+var(5)=(0);( )内の数値を好みで設定します 
+[state -2,根性カウントY軸位置調整]
+type=varset
+trigger1=1
+var(6)=(0);( )内の数値を好みで設定します
+;---------------------------------------------------------------------------
+;すごいガード時のエフェクト /
+;---------------------------
+[state -2,すごいガード時のエフェクト設定]
+type=varset
+trigger1=1
+var(1)=(0);( )内の数値を1か0で設定する
+;0だとプライマルアーマー風　1だと原作っぽく七色の爆発が出ます
+;===========================================================================
+;システム制御用記述
+;===========================================================================
+[state -2,システム制御用ヘルパー発生]
+type=helper
+trigger1=numhelper(7)=0
+helpertype=normal
+name="Number-seven"
+id=7
+pos=0,0
+postype=p1
+facing=1
+stateno=7
+keyctrl=0
+ownpal=1
+supermovetime=999999999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999999999
+[state -2,システム制御用のヘルパーくらい出させろ]
+type=assertspecial
+trigger1=roundstate<=2
+trigger1=numhelper(7)=0
+flag=noko
+flag2=intro
+[state -2,システム制御用のヘルパーくらい出させろ]
+type=nothitby
+trigger1=roundstate<2
+value2=sca,aa,ap,at
+time=5
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;---------------------------------------------------------------------------
+;根性システム関連	 /
+;------------------------
+[state -2,根性ゲージセット]
+type=varset
+trigger1=roundstate!=2
+trigger1=fvar(0)!=fvar(3)
+fvar(0)=fvar(3)
+;---------------------------
+[state -2,特殊ゲージ回復]
+type=varadd
+trigger1=roundstate=2
+trigger1=movetype!=a
+trigger1=numtarget=0;永久対策+ずっと俺のターン対策
+trigger1=var(2)=0;根性シールド時回復しないように
+trigger1=stateno!=[900,950];すごいガード時回復しないように
+trigger1=fvar(0)<fvar(3)
+fvar(0)=(fvar(3)/900*(1+(ctrl=1))/(1+(numexplod(7050)!=0)))*(1+(var(40)*0.3)+(var(40)=10)*3)
+ignorehitpause=1
+persistent=1
+[state -2,特殊ゲージ枯渇]
+type=varset
+trigger1=roundstate=2
+trigger1=fvar(0)<=0
+trigger1=helper(7),numexplod(7100)!=0
+fvar(0)=-fvar(3)
+ignorehitpause=1
+persistent=1
+[state -2,特殊ゲージ復帰]
+type=varset
+trigger1=roundstate=2
+trigger1=movetype!=h
+trigger1=fvar(0)>0
+trigger1=helper(7),numexplod(7150)=1
+fvar(0)=fvar(3)
+ignorehitpause=1
+persistent=1
+[state -2,特殊ゲージ最大値オーバー時]
+type=varset
+trigger1=roundstate=2
+trigger1=fvar(0)>fvar(3)
+fvar(0)=fvar(3)
+ignorehitpause=1
+persistent=1
+[state -2,特殊ゲージ最大値オーバー時]
+type=varset
+trigger1=roundstate=2
+trigger1=fvar(0)<-fvar(3)
+fvar(0)=-fvar(3)
+ignorehitpause=1
+persistent=1
+[state -2,根性枯渇時]
+type=assertspecial
+trigger1=fvar(0)<=0
+flag=nostandguard
+flag2=nocrouchguard
+flag3=noairguard
+[state -2,根性リザレク後根性カウント0固定]
+type=varset
+trigger1=numexplod(7777)!=0
+var(40)=0
+persistent=1
+;---------------------------------------------------------------------------
+;コンボ補正	　 /
+;------------------
+;---------------------------
+[state -2,補正ランクリセット]
+type=varset
+trigger1=numtarget=0
+trigger1=movetype!=a
+var(11)=0
+[state -2,コンボ補正リセット]
+type=varset
+trigger1=numtarget=0
+trigger1=movetype!=a
+fvar(1)=1
+[state -2,技種補正リセット]
+type=varset
+trigger1=numtarget=0
+trigger1=movetype!=a
+var(10)=0
+;---------------------------
+;■すごいきつい
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=5
+trigger1=fvar(1)<0.1
+fvar(1)=0.1
+ignorehitpause=1
+;■きつめ
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=4
+trigger1=fvar(1)<0.15
+fvar(1)=0.15
+ignorehitpause=1
+;■ふつう
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=3
+trigger1=fvar(1)<0.225
+fvar(1)=0.225
+ignorehitpause=1
+;■ゆるめ
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=2
+trigger1=fvar(1)<0.3375
+fvar(1)=0.3375
+ignorehitpause=1
+;■すごいゆるい
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=1
+trigger1=fvar(1)<0.50625
+fvar(1)=0.50625
+ignorehitpause=1
+;■特殊-下限根性比例
+[state -2];コンボ補正レート下限
+type=varset
+triggerall=var(11)=-1
+trigger1=fvar(1)<(fvar(0)/fvar(3))
+fvar(1)=(fvar(0)/fvar(3))
+ignorehitpause=1
+;---------------------------
+[state -2,攻撃力補正]
+type=attackmulset
+trigger1=fvar(1)!=0
+value=fvar(1)/(1+var(10))
+;---------------------------------------------------------------------------
+;根性アーマー処理	　 /
+;--------------------------
+[state 7]
+type=nothitby
+trigger1=numexplod(5)!=0
+value=sca,aa,ap,at
+time=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 7]
+type=hitoverride
+trigger1=numexplod(5)!=0
+slot=1
+attr=sca,aa,ap,at
+time=1
+stateno=0
+ctrl=1
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state 1000,0]
+type=palfx
+trigger1=numexplod(5)!=0
+trigger1=numhelper(7)!=0
+trigger1=(helper(7),time)%6>1
+time=1
+add=10,10,220
+mul=255,255,255
+sinadd=0,0,0,10
+invertall=0
+color=255
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+[state -2,特殊ゲージ消費]
+type=varadd
+trigger1=stateno!=910
+trigger1=numexplod(5)!=0
+fvar(0)=-0.1;◆固定数値減算
+;---------------------------------------------------------------------------
+;根性リザレクション処理	　 /
+;--------------------------
+[state 7リザレク起動前noKOフラグ]
+type=assertspecial
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+triggerall=numenemy!=0
+trigger1=numexplod(7777)=0
+trigger1=numtarget=0
+flag=noko
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7]
+type=hitoverride
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+trigger1=numexplod(7777)=0
+trigger1=life=0
+slot=4
+attr=sca,aa,ap,at
+time=1
+stateno=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7AIリザレク起動前noKOフラグ]
+type=assertspecial
+triggerall=var(59)
+triggerall=var(40)>0
+triggerall=numenemy!=0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger1=numexplod(7777)=0
+trigger1=numtarget=0
+flag=noko
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7AIリザレク起動前noKOフラグ]
+type=assertspecial
+triggerall=var(59)
+triggerall=var(40)>0
+triggerall=numenemy!=0
+triggerall=roundstate=2
+triggerall=numenemy=2||numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=numexplod(7777)=0
+triggerall=numtarget=0
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+flag=noko
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7]
+type=hitoverride
+triggerall=var(59)
+triggerall=var(40)>0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger1=numexplod(7777)=0
+trigger1=life=0
+slot=4
+attr=sca,aa,ap,at
+time=1
+stateno=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7]
+type=hitoverride
+triggerall=var(59)
+triggerall=var(40)>0
+triggerall=roundstate=2
+triggerall=numenemy=2||numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=numexplod(7777)=0
+triggerall=life=0
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+slot=4
+attr=sca,aa,ap,at
+time=1
+stateno=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;---------------------------------------------------------------------------
+;エフェクト制御　 /
+;-----------------
+;150-エフェクト消し
+[state -2,ガードEF]
+type=removeexplod
+trigger1=movetype=a
+id=150
+;-----------------------------------
+;650-エフェクト消し
+[state -2,斜め下]
+type=removeexplod
+trigger1=pos y=0
+trigger2=stateno!=650
+id=655
+;-----------------------------------
+;すごパ(物理)用エフェクト消し
+[state -2,収束1002]
+type=removeexplod
+trigger1=(anim!=1000)
+trigger2=(anim=1000)&&(animelemtime(17)>0)
+trigger3=movetype!=a
+id=1002
+[state -2,収束1002]
+type=removeexplod
+trigger1=(anim!=1000)
+trigger2=(anim=1000)&&(animelemtime(17)>0)
+trigger3=movetype!=a
+id=1006
+;-----------------------------------
+;すごパ(特殊)用エフェクト消し
+[state -2,収束1002]
+type=removeexplod
+trigger1=(anim!=1100)
+trigger2=(anim=1100)&&(animelemtime(21)>0)
+trigger3=movetype!=a
+id=1102
+[state -2,グー1106]
+type=removeexplod
+trigger1=(anim!=1100)
+trigger2=(anim=1100)&&(animelemtime(21)>0)
+trigger3=movetype!=a
+id=1106
+;-----------------------------------
+;すごいパンチ用エフェクト消アニメ
+[state ,水平]
+type=explod
+triggerall=numexplod(1010)!=0
+triggerall=numexplod(1015)=0
+trigger1=(stateno!=1000)&&(stateno!=1010)&&(stateno!=1310)
+trigger1=(stateno!=2000)&&(stateno!=3000)
+trigger2=(stateno=1000)||(stateno=2000)||(stateno=3000)
+trigger2=((animelemtime(25)>=0)||(movecontact))
+trigger3=(anim=1310)&&((animelem=12)||(movecontact))
+trigger4=(stateno=1000)||(stateno=2000)||(stateno=3000)
+trigger4=time<=1
+trigger5=(anim=1010)&&((animelem=10)||(movecontact))
+anim=6605
+id=1015
+postype=p1
+pos=ceil(230*const(size.xscale)),ceil(-150*const(size.yscale))
+facing=1
+vfacing=1
+scale=1*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause	=1
+;空中すごいパンチ用エフェクト消し
+[state -2,水平]
+type=removeexplod
+trigger1=numexplod(1015)!=0
+id=1010
+ignorehitpause	=1
+;-----------------------------------
+;空中すごいパンチ用エフェクト消アニメ
+[state ,斜め下]
+type=explod
+trigger1=numexplod(1600)!=0
+trigger1=numexplod(1605)=0
+trigger1=(stateno!=1600)&&(stateno!=1620)
+anim=6605
+id=1605
+postype=p1
+pos=ceil(170*const(size.xscale)),ceil(-180*const(size.yscale))
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+;空中すごいパンチ用エフェクト消し
+[state -2,斜め下]
+type=removeexplod
+trigger1=numexplod(1605)!=0
+id=1600
+;-----------------------------------
+;空中すごいキック用エフェクト消アニメ
+[state ,斜め下]
+type=explod
+triggerall=numexplod(1700)!=0
+triggerall=numexplod(1705)=0
+trigger1=(stateno!=1700)&&(stateno!=2800)
+trigger2=(stateno=1700)||(stateno=2800)
+trigger2=time<=1
+anim=6755
+id=1705
+postype=p1
+pos=0,0
+facing=1
+vfacing=1
+scale=1.2*const(size.xscale),1.4*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+;空中すごいキック用エフェクト消し
+[state -2,斜め下]
+type=removeexplod
+trigger1=numexplod(1705)!=0
+id=1700
+;-----------------------------------
+;ゲージ溜め用エフェクト消えアニメ
+[state ,消えアニメ]
+type=explod
+triggerall=numexplod(704)=0
+triggerall=stateno!=700
+trigger1=numexplod(702)!=0
+trigger2=numexplod(703)!=0
+anim=704
+id=704
+postype=p1
+pos=-5,0
+vel=0,-15
+facing=-1
+vfacing=1
+scale=1.3*const(size.xscale),1.3*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+[state ,消えアニメ]
+type=explod
+triggerall=numexplod(704)=0
+triggerall=stateno!=700
+trigger1=numexplod(705)!=0
+trigger2=numexplod(706)!=0
+anim=707
+id=704
+postype=p1
+pos=-5,0
+vel=0,-15
+facing=-1
+vfacing=1
+scale=1.3*const(size.xscale),1.3*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+[state ,消えアニメ]
+type=explod
+triggerall=numexplod(704)=0
+triggerall=stateno!=700
+trigger1=numexplod(708)!=0
+trigger2=numexplod(709)!=0
+anim=710
+id=704
+postype=p1
+pos=-5,0
+vel=0,-15
+facing=-1
+vfacing=1
+scale=1.3*const(size.xscale),1.3*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+;ゲージ溜め用エフェクト消し
+[state -2,消す];開始
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=702
+[state -2,消す];開始
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=705
+[state -2,消す];開始
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=708
+[state -2,消す];蒼
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=703
+[state -2,消す];紅
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=706
+[state -2,消す];金
+type=removeexplod
+trigger1=numexplod(704)!=0
+id=709
+;-----------------------------------
+;たいらんれいぶ用エフェクト消えアニメ
+[state ,水平]
+type=explod
+triggerall=numexplod(3005)!=0
+triggerall=numexplod(3006)=0
+trigger1=(stateno!=3000)
+trigger2=(anim=3000)&&(animelem=25)
+trigger3=(anim=3000)&&(movecontact)
+trigger3=(animelemtime(25)<0)&&(animelemtime(23)>=0)
+anim=3006
+id=3006
+postype=p1
+pos=ceil(230*const(size.xscale)),ceil(-150*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.8*const(size.xscale),1*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause	=1
+;空中すごいパンチ用エフェクト消し
+[state -2,水平]
+type=removeexplod
+trigger1=numexplod(3006)!=0
+id=3005
+ignorehitpause	=1
+[state ,斜め]
+type=null;Explod
+triggerall=numexplod(3010)!=0
+triggerall=numexplod(3100)=0
+trigger1=(stateno!=3000)||(anim!=3000)
+trigger2=(anim=3000)&&(animelem=48)
+trigger3=(anim=3000)&&(movecontact)
+trigger3=(animelemtime(48)<0)&&(animelemtime(45)>=0)
+anim=3011
+id=3011
+postype=p1
+pos=ceil(230*const(size.xscale)),ceil(-150*const(size.yscale))
+facing=1
+vfacing=1
+scale=0.6*const(size.xscale),0.7*const(size.yscale)
+bindtime=1
+removetime=-2
+sprpriority=6
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+ignorehitpause	=1
+;空中すごいパンチ用エフェクト消し
+[state -2,水平]
+type=removeexplod
+trigger1=numexplod(3011)!=0
+id=3010
+ignorehitpause	=1
+;-----------------------------------
+[state -3,通常行動系音をstop]
+type=stopsnd
+trigger1=movetype!=i
+channel=3
+[state -3,すごパ収束音をstop]
+type=stopsnd
+trigger1=movetype!=a
+channel=10
+;---------------------------------------------------------------------------
+;デバッグ用スイッチ /　兼　パレットNoによる追加効果
+;-------------------
+[state -2,根性ゲージ]
+type=varset
+trigger1=0;★デバッグ用ゲージ満タン
+trigger2=palno=7
+trigger3=palno=9
+trigger4=palno=10
+trigger5=palno=12
+fvar(0)=(fvar(3))
+ignorehitpause=1
+persistent=1
+[state -2,根性カウント]
+type=varset
+trigger1=0;★デバッグ用カウント入力
+trigger2=palno=8
+trigger3=palno=9
+trigger4=palno=11
+trigger5=palno=12
+var(40)=10
+ignorehitpause=1
+persistent=1
+[state -2,通常ゲージ]
+type=poweradd
+trigger1=0;★デバッグ用ゲージ満タン
+trigger2=palno=10
+trigger3=palno=11
+trigger4=palno=12
+value=3000
+ignorehitpause=1
+persistent=1
+[state -2,気合と根性シールド]
+type=varset
+trigger1=0;★デバッグ用常時展開
+trigger1=p2life!=0
+var(2)=10
+ignorehitpause=1
+persistent=1
+;[シールド処理時保険]-----------------------------------
+[state -2,水平]
+type=lifeset
+triggerall=roundstate>=2
+triggerall=numhelper(7)!=0
+triggerall=helper(7),fvar(0)>0
+trigger1=var(2)!=0
+value=ceil(helper(7),fvar(0))
+ignorehitpause	=1
+[state -2,水平]
+type=nothitby
+triggerall=roundstate>=2
+triggerall=numhelper(7)!=0
+triggerall=var(2)!=0
+trigger1=(stateno>=5000)
+trigger2=(stateno<5000)&&(movetype=h)
+value2=,aa,ap,at
+time=90
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state -2,水平]
+type=selfstate
+triggerall=roundstate>=2
+triggerall=numhelper(7)!=0
+triggerall=var(2)!=0
+triggerall=roundstate<3
+trigger1=(stateno>=5000)
+trigger2=(stateno<5000)&&(movetype=h)
+value=1256
+ignorehitpause	=1
+;-----------------------------------
+[state -2,クリップボード]
+type=displaytoclipboard
+trigger1=1
+text="Projsuu=%d, Projtime=%d, Stress=%d, konjou=%f, guard=%d \n"
+params=var(50),var(52),var(54),fvar(0),var(55)
+ignorehitpause	=1
+[state -2,クリップボード（追加専用）]
+type=appendtoclipboard
+trigger1=1
+text="rank=%d, rate=%f, count=%d, P2bodydist X=%d, P2dist Y=%d \n"
+params=var(11),fvar(1),var(10),(ceil(p2bodydist x)),(ceil(p2dist y))
+ignorehitpause	=1
+[state -2,クリップボード（追加専用）]
+type=null;AppendToClipboard
+trigger1=1
+text="Position X=%d,Y=%d, Velocity X=%f,Y=%f, Hit=%d \n"
+params=floor(pos x),floor(pos y),(vel x),(vel y),(movehit)
+[state ];winフラグ記録
+type=varset
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=var(44)=0
+trigger1=win||winko||wintime||winperfect
+var(44)=1
+ignorehitpause=1
+[state ];enemy,winフラグ記録
+type=varset
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=var(43)=0
+trigger1=enemy,win||enemy,winko||enemy,wintime||enemy,winperfect
+trigger2=numenemy>1
+trigger2=enemy(1),win||enemy(1),winko||enemy(1),wintime||enemy(1),winperfect
+var(43)=1
+ignorehitpause=1
+[state -2,Tag]
+type=varset
+triggerall=!ishelper
+triggerall=1||var(0):=0
+triggerall=numenemy>1
+triggerall=enemy(1),alive=1
+trigger1=enemy,alive=0
+trigger2=enemynear,id!=enemy,id
+var(0)=1
+ignorehitpause=1
+[state -2,向き];値=-1で向き合っている。=1で同じ向き。varには符号逆転で代入。
+type=varset
+triggerall=!ishelper
+triggerall=!(enemy(var(0)),backedgebodydist=0&&enemy(var(0)),vel x<=0)
+triggerall=!(enemy(var(0)),frontedgebodydist=0&&enemy(var(0)),vel x>=0)
+trigger1=var(59)
+var(55)=-((facing)*(enemy(var(0)),facing))
+ignorehitpause=1
+[state -2,相手壁際]
+type=varset
+triggerall=!ishelper
+triggerall=var(59)
+trigger1=enemy(var(0)),backedgebodydist<=2
+trigger1=enemy(var(0)),vel x<=0
+trigger2=enemy(var(0)),frontedgebodydist<=2
+trigger2=enemy(var(0)),vel x>=0
+var(55)=0
+ignorehitpause=1
+[state -2,2]
+type=assertspecial
+trigger1=var(59)
+flag=nowalk
+ignorehitpause=1
+[state ]
+type=varset
+trigger1=!ishelper
+trigger1=var(59)
+trigger1=pos y=0
+trigger1=ctrl
+trigger1=stateno!=[40,51]
+trigger1=var(46)!=0
+var(46)=0
+[state ];敵helperとの距離x
+type=varset
+triggerall=!ishelper
+trigger1=numhelper(30000)
+trigger1=helper(30000),sysvar(4)!=0
+trigger1=1||var(54):=0
+trigger1=1||var(54):=helper(30000),sysvar(4)
+trigger1=playeridexist(var(54))
+var(51)=ceil(abs(playerid(var(54)),pos x-pos x)*(1*(playerid(var(54)),pos x>=pos x)-1*(playerid(var(54)),pos x<pos x))*(facing))
+ignorehitpause=1
+[state ];敵helperとの距離x
+type=varset
+triggerall=!ishelper
+trigger1=numhelper(30000)
+trigger1=helper(30000),sysvar(4)=0
+trigger2=!numhelper(30000)
+trigger3=roundstate!=2
+trigger4=!playeridexist(helper(30000),sysvar(4))
+var(51)=0
+ignorehitpause=1
+[state ];敵helperとの距離y
+type=varset
+triggerall=!ishelper
+trigger1=numhelper(30000)
+trigger1=helper(30000),sysvar(4)!=0
+trigger1=1||var(54):=0
+trigger1=1||var(54):=helper(30000),sysvar(4)
+trigger1=playeridexist(var(54))
+var(52)=ceil(playerid(var(54)),pos y+playerid(var(54)),vel y-pos y)
+ignorehitpause=1
+[state ];敵helperとの距離y
+type=varset
+triggerall=!ishelper
+trigger1=numhelper(30000)
+trigger1=helper(30000),sysvar(4)=0
+trigger2=!numhelper(30000)
+trigger3=roundstate!=2
+trigger4=!playeridexist(helper(30000),sysvar(4))
+var(52)=0
+ignorehitpause=1
+[state ]
+type=varset
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=numhelper(21000)
+triggerall=var(50)!=0
+trigger1=p2movetype!=a
+trigger2=roundstate!=2
+trigger3=movetype=h
+trigger4=p2stateno!=var(50)
+var(50)=0
+ignorehitpause=1
+[state ]
+type=varset
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=numhelper(21000)
+triggerall=gametime>helper(21000),var(3)+14
+triggerall=var(50)=0
+trigger1=p2movetype=a
+var(50)=p2stateno
+ignorehitpause=1
+[state ];roundstate<2で何かキー入力が入った＞＞mugenのバグでその後の入力が1f認識されないためAI暴発の原因となる……らしい
+type=varset
+triggerall=!ishelper
+triggerall=roundstate<2
+triggerall=var(28)=0
+trigger1=command="a"
+trigger2=command="b"
+trigger3=command="c"
+trigger4=command="x"
+trigger5=command="y"
+trigger6=command="z"
+trigger7=command="start"
+trigger8=command="F"
+trigger9=command="B"
+trigger10=command="U"
+trigger11=command="D"
+var(28)=1
+[state ]
+type=varset
+triggerall=!ishelper
+trigger1=roundstate>2
+trigger1=var(28)=1
+var(28)=0
+[state ];敵最大velかつ発動速い移動手段
+type=varset
+triggerall=!ishelper
+triggerall=roundstate=2
+trigger1=var(24+var(0))<enemy(var(0)),vel x
+trigger1=enemy(var(0)),movetype!=h
+trigger1=enemy(var(0)),time<12
+trigger1=movetype!=h
+var(24+var(0))=enemy(var(0)),vel x
+ignorehitpause=1
+[state ];警戒すべき敵機動力評価
+type=null
+triggerall=!ishelper
+triggerall=roundstate=2
+triggerall=numhelper(30000)
+trigger1=1||var(26):=ifelse(ceil(helper(30000),fvar(22))>var(24),ceil(helper(30000),fvar(22)),var(24))
+trigger1=1||var(27):=ifelse(ceil(helper(30000),fvar(23))>var(25),ceil(helper(30000),fvar(23)),var(25))
+ignorehitpause=1
+[state -2,クリップボード（追加専用）]
+type=null;AppendToClipboard
+trigger1=1
+text="v51=%d,v52=%d \n"
+params=var(51),var(52)
+[state -2,AI起動用ヘルパー]
+type=helper
+trigger1=!ishelper
+trigger1=playeridexist(id)
+trigger1=!numhelper(12345)
+trigger1=(roundstate<2)||(roundstate=2&&sysvar(4)<=30)
+trigger1=alive
+trigger1=var(59)=0
+;Trigger1=(PrevStateNo=[191,193])||PrevStateNo=5900
+;Trigger1=ctrl&&stateno=0
+helpertype=normal
+name="AI Start Helper"
+stateno=10000
+id=12345
+pos=9999,9999
+keyctrl=1
+pausemovetime=2147483647
+supermovetime=2147483647
+[state -2,AI制御用]
+type=helper
+trigger1=!ishelper
+trigger1=playeridexist(id)
+trigger1=!numhelper(21000)
+trigger1=alive&&roundstate<=2
+helpertype=normal
+name="AICTRL"
+stateno=21000
+id=21000
+pos=9999,9999
+keyctrl=0
+ignorehitpause=1
+pausemovetime=2147483647
+supermovetime=2147483647
+[state -2,AI用ID型Helper探索]
+type=helper
+triggerall=!ishelper
+triggerall=playeridexist(id)
+triggerall=!numhelper(30000)
+trigger1=alive&&roundstate<2&&var(59)=0||(roundstate=2&&sysvar(4)<=30&&var(59)=0)
+trigger2=alive&&roundstate<=2&&var(59)!=0
+helpertype=normal
+name="SGITAIHELPERDETECTOR"
+stateno=30000
+id=30000
+pos=-9999,99999
+keyctrl=0
+ignorehitpause=1
+pausemovetime=2147483647
+supermovetime=2147483647
+;5150でステート奪ったまま勝利してくる相手からリザレクションするため
+[state 7]
+type=selfstate
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype=a
+trigger1=sysvar(3)!=gametime-3156
+trigger1=stateno=5150
+trigger1=time
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7]
+type=selfstate
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype!=a
+trigger1=sysvar(3)!=gametime-3156
+trigger1=stateno=5150
+trigger1=time
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=selfstate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype=a
+trigger1=sysvar(3)!=gametime-3156
+trigger1=stateno=5150
+trigger1=time
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=selfstate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=2||numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=numexplod(7777)=0
+triggerall=numtarget=0
+triggerall=stateno!=[4000,4050]
+triggerall=life=0
+triggerall=statetype=a
+triggerall=sysvar(3)!=gametime-3156
+triggerall=stateno=5150
+triggerall=time
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=selfstate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=stateno!=[4000,4050]
+triggerall=life=0
+triggerall=statetype!=a
+triggerall=sysvar(3)!=gametime-3156
+triggerall=stateno=5150
+triggerall=time
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=selfstate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+triggerall=sysvar(3)!=gametime-3156
+triggerall=stateno=5150
+triggerall=time
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype!=a
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;===========================================================================
+; 準常時監視ステート（－３）
+;===========================================================================
+;---------------------------------------------------------------------------
+; こちらは通常の食らい状態以外の「P2StateNo」や「TargetState」等で制御された、
+; 作成者が任意に指定した相手側の食らいステートに限り、
+; 登録したステートコントローラが有効にはなりません。
+; －１や－２と上手く使い分けて行きましょう。
+;---------------------------------------------------------------------------
+[statedef -3]
+;-----------------------------------
+;根性アーマー用フラグ消し
+[state -2,水平]
+type=removeexplod
+triggerall=stateno!=910
+triggerall=numexplod(5)!=0
+trigger1=var(2)=0
+trigger2=var(40)=0
+id=5
+ignorehitpause	=1
+;---------------------------------------------------------------------------
+;根性リザレクション処理	　 /
+;--------------------------
+[state 7]
+type=changestate
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype=a
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7]
+type=changestate
+triggerall=var(59)=0
+triggerall=(command="hold_c")
+triggerall=(command="hold_z")
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype!=a
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=changestate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype=a
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=changestate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=2||numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=numexplod(7777)=0
+triggerall=numtarget=0
+triggerall=stateno!=[4000,4050]
+triggerall=life=0
+triggerall=statetype=a
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+value=4010
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=changestate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=numenemy=1&&!numpartner
+triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
+triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger1=stateno!=[4000,4050]
+trigger1=life=0
+trigger1=statetype!=a
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+[state 7,AIre]
+type=changestate
+triggerall=var(59)&&alive
+triggerall=var(40)>0
+triggerall=numexplod(7777)=0
+triggerall=roundstate=2
+triggerall=stateno!=[4000,4050]
+triggerall=life=0
+triggerall=statetype!=a
+trigger1=numpartner
+trigger1=partner,alive
+trigger2=numpartner
+trigger2=partner,alive=0
+trigger2=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger2=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+trigger3=!numpartner
+trigger3=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
+trigger3=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+value=4000
+ctrl=0
+supermovetime=999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999
+ignorehitpause=1
+persistent=1
+;-----------------------------------
+[state 195,声]
+type=playsnd
+trigger1=!ishelper
+trigger1=stateno!=[120,159]
+trigger1=stateno!=[950,960]
+trigger1=stateno!=1010
+trigger1=stateno!=1110
+trigger1=gethitvar(damage)!=0
+trigger1=random<gethitvar(damage)*5
+value=5,(5000+(random%4))
+channel=0
+lowpriority=1
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+;---------------------------------------------------------------------------
+[state -3]
+type=varset
+trigger1=1
+sysvar(3)=gametime-3156
+ignorehitpause=1
+[state -3]
+type=varset
+trigger1=!ishelper
+trigger1=roundstate!=2
+sysvar(4)=0
+[state -3]
+type=varadd
+trigger1=!ishelper
+trigger1=roundstate=2
+sysvar(4)=1
+[state ]
+type=varset
+trigger1=!ishelper
+trigger1=var(59)
+trigger1=var(45)
+trigger1=movetype=h
+var(45)=0
+[state ]
+type=varset
+trigger1=!ishelper
+trigger1=fvar(38)
+fvar(38)=0
+ignorehitpause=1
+[state ]
+type=varset
+triggerall=!ishelper
+trigger1=(enemy(var(0)),name="SuperMario"||enemy(var(0)),name="SuperLuigi")&&(enemy(var(0)),authorname="ShinRyoga & NeOaNkH")&&(enemy(var(0)),var(3)>0||enemy(var(0)),palno=8||enemy(var(0)),palno=11||enemy(var(0)),stateno=105||enemy(var(0)),stateno=110)
+trigger2=(enemy(var(0)),name="Haruka_Amami"&&enemy(var(0)),authorname="ハロヴェリ(HaloVeli)")&&(enemy(var(0)),fvar(30)=1||(enemy(var(0)),anim=[2600,2601]))
+trigger3=(enemy(var(0)),name="Sogiita Gunha"&&enemy(var(0)),authorname="fugaku")&&enemy(var(0)),var(2)>0
+trigger4=p2name="raigu's Alucard"&&p2stateno=1800&&enemy(var(0)),animtime<-1
+trigger5=(p2name="Accelerator"&&enemy(var(0)),authorname="otika"&&p2stateno=6400)||(p2name="Arrange_Accelerator"&&enemy(var(0)),authorname="にわかロリコン"&&(p2stateno=[6400,6420]))
+trigger6=p2name="Dragon Claw"&&enemy(var(0)),authorname="Reu"
+trigger6=p2stateno=1320
+trigger6=enemy(var(0)),animtime<-3
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定 完全無敵
+type=varset
+triggerall=numenemy
+trigger1=0;P2StateNo=105
+trigger2=p2name="cvsrugal"||p2name="cvsg_rugal"
+trigger2=p2stateno=1800
+trigger3=p2name="cvsgouki"||p2name="cvsgouki_ex"||p2name="cvsgouki_Normal"
+trigger3=p2stateno=1500
+trigger4=p2name="cvsryu"||p2name="cvsryu_ex"||p2name="cvsryu_Normal"||p2name="Shin Gouki"||p2name="Ryu"
+trigger4=p2stateno=1400
+trigger5=p2name="Evil Ken"||p2name="Evil Ryu"||p2name="Evil Dan"
+trigger5=p2stateno=[3960,3971]
+trigger6=p2name="KoNoha"
+trigger6=p2stateno=1200||p2stateno=1220||p2stateno=1610
+trigger7=p2name="jam"
+trigger7=p2stateno=[1310,1311]
+trigger8=p2name="eddie"
+trigger8=p2stateno=1101
+trigger9=p2name="TOKI-(NERICYA)"
+trigger9=(p2stateno=[1210,1250])||(p2stateno=[1300,1600])
+trigger10=p2name="OGRE"
+trigger10=p2stateno=[980,991]
+trigger11=enemy(var(0)),authorname="Toma & Raien Makoto"
+trigger11=p2name="Aoko Aozaki"||p2name="Shiki_Nanaya"
+trigger11=p2stateno=1253
+trigger12=p2name="General"
+trigger12=p2stateno=[1000,1012]
+trigger13=p2name="Omega Goenitz"
+trigger13=p2stateno=900||p2stateno=1000||p2stateno=3100
+trigger14=p2name="Reimu_Hakurei"
+trigger14=p2stateno=3021||p2stateno=3026
+trigger15=0;P2Name="SHIN"
+trigger15=0;P2StateNo=2400||P2StateNo=2050||(P2StateNo=2000&&enemy(var(0)),Time<99)||(var(58)&&StateNo=1400)
+trigger16=p2name="Marisa Kirisame"
+trigger16=(p2stateno=[900,901])||(p2stateno=[2010,2011])||(p2stateno=[2020,2021])||p2stateno=2030||(p2stateno=[2040,2042])
+trigger17=p2name="Reimu_Hakurei"
+trigger17=p2stateno=3020||enemy(var(0)),var(12)=3021&&p2stateno=119||p2stateno=3022||(p2stateno=[3040,3041])||p2stateno=3051
+trigger18=p2name="Remilia_Scarlet"
+trigger18=p2stateno=119||p2stateno=1001&&enemy(var(0)),movecontact||p2stateno=1012&&enemy(var(0)),movecontact||(p2stateno=[3030,3031])||p2stateno=3051
+trigger19=p2name="Youmu_Konpaku"
+trigger19=p2stateno=3100||p2stateno=710
+trigger20=p2name="Jedah"
+trigger20=p2stateno=500||p2stateno=810||enemy(var(0)),time<14&&(p2stateno=1300||p2stateno=2300)
+trigger21=p2name="Izayoi Sakuya Brando"
+trigger21=p2stateno=2380||p2stateno=881||p2stateno=4200&&enemy(var(0)),time<31||p2stateno=1999&&enemy(var(0)),time<21
+trigger22=p2name="White_Len"||p2name="White_Len(CPU)"
+trigger22=p2stateno=1400||p2stateno=1410||p2stateno=1450
+trigger23=p2name="IGNIZ"
+trigger23=p2stateno=[2100,2101]
+trigger24=p2name="ZERO"
+trigger24=p2stateno=[3020,3021]
+trigger25=p2name="ORIGINAL ZERO"
+trigger25=p2stateno=[3100,3110]
+trigger26=p2name="Patchouli"
+trigger26=p2stateno=900||(p2stateno=[1020,1021])||p2stateno=1160
+trigger27=p2name="Aya Syameimaru"
+trigger27=p2stateno=1201||p2stateno=1400||p2stateno=1500
+trigger28=p2name="Youmu_Konpaku"
+trigger28=p2stateno=3100||p2stateno=710
+trigger29=p2name="Suika Ibuki"
+trigger29=p2stateno=[1300,1321]
+trigger30=p2name="Hulk"
+trigger30=p2stateno=66||(p2stateno=[940,942])
+trigger31=p2name="Sakuya Izayoi"
+trigger31=p2stateno=750
+trigger32=p2name="Yakumo Yukari"
+trigger32=(p2stateno=[3000,3002])||(p2stateno=[3010,3012])
+trigger33=p2name="Evil Dan"
+trigger33=(p2stateno=[3960,3962])||(p2stateno=[3970,3972])||(p2stateno=[3980,3982])||(p2stateno=[3990,3992])
+trigger34=p2name="Strider_Hiryu"
+trigger34=(p2stateno=[3040,3041])||(p2stateno=[7800,7801])||((p2stateno=[7610,7620])&&(enemy(var(0)),time=[1,10]))
+trigger35=p2name="New Nakoruru"
+trigger35=(p2stateno=[60,61])||(p2stateno=[65,67])||(p2stateno=[3020,3070])||(p2stateno=[3113,3140])||(p2stateno=[3210,3240])
+trigger36=p2name="Shadow DIO"
+trigger36=p2stateno=105||p2stateno=270||(p2stateno=1200&&(enemy(var(0)),time=[1,30]))
+trigger37=p2name="Buront"
+trigger37=p2stateno=701||p2stateno=4321||p2stateno=24000||p2stateno=1400||p2stateno=1420||(p2stateno=701&&(enemy(var(0)),time=[1,21]))
+trigger38=enemy(var(0)),authorname="Warusaki3"
+trigger38=p2stateno=800||p2stateno=830||p2stateno=900||p2stateno=5201
+trigger39=p2name="testa"
+trigger39=p2stateno=1300
+trigger40=p2name="dio"
+trigger40=p2stateno=701||p2stateno=1200
+trigger41=p2name="Dragon Claw"
+trigger41=(p2stateno=[1300,1301])||(p2stateno=[1310,1311])||(p2stateno=[1320,1321])
+trigger42=p2name="cvstodo"
+trigger42=p2stateno=3100
+trigger43=p2name="Remy"
+trigger43=p2stateno=3200
+trigger44=p2name="joseph"
+trigger44=p2stateno=1020
+trigger45=p2name="Ella"
+trigger45=p2stateno=10004||p2stateno=10006||p2stateno=10008
+trigger46=p2name="Dhalsim with clones"
+trigger46=p2stateno=1600
+trigger47=p2name="TOKI-(NERICYA)"||p2name="AMIBA"
+trigger47=p2stateno=1300
+trigger48=p2name="Izayoi Sakuya Brando"
+trigger48=p2stateno=1820
+trigger49=p2name="Ash"
+trigger49=p2stateno=700||p2stateno=710
+trigger50=enemy(var(0)),authorname="Phantom.of.the.Server"
+trigger50=p2stateno=720||p2stateno=710
+trigger51=p2name="IGNIZ"
+trigger51=p2stateno=900||p2stateno=910
+trigger52=p2name="goenitz"
+trigger52=p2stateno=900||p2stateno=920
+trigger53=p2name="BRIDGET"
+trigger53=p2stateno=3200
+trigger54=p2name="SHIN"
+trigger54=enemy(var(0)),var(51)
+trigger55=p2name="Tin's Leona"
+trigger55=p2stateno=500||p2stateno=510||p2stateno=3999
+trigger56=p2name="Ralf Jones"
+trigger56=p2stateno=810||p2stateno=815
+trigger57=p2name="justice"
+trigger57=p2stateno=1200
+trigger57=enemy(var(0)),var(58)=0&&(time=[0,7])||enemy(var(0)),var(58)&&(time=[0,11])
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="cvsken"
+trigger1=p2stateno=1100
+trigger1=enemy(var(0)),time<6
+trigger2=p2stateno=1800
+trigger2=enemy(var(0)),animelemtime(7)<0
+trigger3=p2stateno=3000||p2stateno=3100||p2stateno=3300
+trigger3=enemy(var(0)),time<ifelse(!enemy(var(0)),var(5),53,ifelse(enemy(var(0)),var(5)=1,59,64))
+trigger4=p2stateno=3200
+trigger4=enemy(var(0)),time<64
+trigger5=p2stateno=3400
+trigger5=enemy(var(0)),time<73
+trigger6=p2stateno=3401||p2stateno=3405
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="Ryu"
+trigger1=enemy(var(0)),animelemtime(4)<0
+trigger1=(p2stateno=[1100,1110])||p2stateno=3040||p2stateno=3120
+trigger2=enemy(var(0)),animelemtime(7)<0
+trigger2=(p2stateno=3000||p2stateno=3100||p2stateno=3160)
+trigger3=enemy(var(0)),animelemtime(10)<0
+trigger3=p2stateno=3140
+trigger4=enemy(var(0)),animelemtime(15)<0
+trigger4=p2stateno=3180
+trigger5=enemy(var(0)),animelemtime(3)<0
+trigger5=p2stateno=3020
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="johnny"
+trigger1=p2stateno=3000
+trigger1=enemy(var(0)),animelemtime(5)<2
+trigger2=p2stateno=3200
+trigger2=enemy(var(0)),animelemtime(6)<2
+trigger3=p2stateno=3500
+trigger3=enemy(var(0)),animelemtime(11)<0
+trigger4=p2stateno=1500
+trigger4=enemy(var(0)),animelemtime(7)<0
+trigger5=p2stateno=700
+trigger5=enemy(var(0)),anim=700&&enemy(var(0)),animelemtime(6)<0||enemy(var(0)),anim!=700
+trigger6=p2stateno=105
+trigger6=enemy(var(0)),time<8
+trigger7=p2stateno=860||p2stateno=3001||p2stateno=3501||p2stateno=4010
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="SHIN"
+trigger1=p2stateno=2400
+trigger2=p2stateno=2050
+trigger3=p2stateno=2000
+trigger3=enemy(var(0)),time<97
+trigger4=p2stateno=1400
+trigger4=enemy(var(0)),time<15
+trigger5=p2stateno=1100
+trigger5=enemy(var(0)),var(5)<2
+trigger5=enemy(var(0)),time<(9+(enemy(var(0)),var(58)>0)*11)
+trigger6=enemy(var(0)),var(58)>1
+trigger6=stateno=290||p2stateno=1400||p2stateno=1500||p2stateno=1100||p2stateno=2000||anim!=[1500,1502]
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="BRIDGET"
+trigger1=(p2stateno=1200||p2stateno=1250)
+trigger1=enemy(var(0)),time<16
+trigger2=p2stateno=1590
+trigger2=enemy(var(0)),animelemtime(12)<4
+trigger3=p2stateno=1150
+trigger3=enemy(var(0)),time<5
+trigger4=p2stateno=1520||p2stateno=3310||p2stateno=3605||p2stateno=805||p2stateno=810||p2stateno=930
+trigger5=p2stateno=3100||p2stateno=3300
+trigger5=enemy(var(0)),animelemtime(6)<2
+trigger6=p2stateno=3400
+trigger6=enemy(var(0)),animelemtime(8)<1
+trigger7=p2stateno=3600
+trigger7=enemy(var(0)),var(34)=2||enemy(var(0)),animelemtime(5)<1
+trigger8=p2stateno=935
+trigger8=enemy(var(0)),time<11
+trigger9=p2stateno=950||p2stateno=960
+trigger9=enemy(var(0)),var(34)!=-1
+trigger10=p2stateno=951
+trigger11=p2stateno=961
+trigger11=enemy(var(0)),time<31||enemy(var(0)),var(34)=2
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="sol"
+trigger1=enemy(var(0)),animelemtime(5)<0
+trigger1=p2stateno=1200
+trigger2=enemy(var(0)),animelemtime(2)<0
+trigger2=p2stateno=1300
+trigger3=p2stateno=1100
+trigger4=p2stateno=1150
+trigger5=p2stateno=1110
+trigger6=p2stateno=1160
+trigger7=p2stateno=2100
+trigger8=p2stateno=2110
+trigger9=enemy(var(0)),animelemtime(7)<0
+trigger9=p2stateno=3000
+trigger10=enemy(var(0)),animelemtime(27)<1
+trigger10=p2stateno=3100
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="Ky=kiske"
+trigger1=enemy(var(0)),time<9
+trigger1=(p2stateno=1300||p2stateno=1360||p2stateno=1375)
+trigger2=enemy(var(0)),time<15
+trigger2=p2stateno=1350
+trigger3=enemy(var(0)),time<11
+trigger3=(p2stateno=1370||p2stateno=1320)
+trigger4=enemy(var(0)),time<56
+trigger4=(p2stateno=3000||p2stateno=3100||p2stateno=3300||p2stateno=3350||p2stateno=3600)
+trigger5=enemy(var(0)),time<44
+trigger5=(p2stateno=3200||p2stateno=3800||p2stateno=3400)
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="Ash"
+trigger1=enemy(var(0)),animelemtime(3)<0
+trigger1=(p2stateno=[1100,1101])
+trigger2=enemy(var(0)),animelemtime(4)<0
+trigger2=(p2stateno=[1150,1151])
+trigger3=enemy(var(0)),time<31
+trigger3=p2stateno=2000
+trigger4=enemy(var(0)),time<37
+trigger4=p2stateno=2100
+trigger5=p2stateno=3000
+trigger6=enemy(var(0)),animelemtime(13)<0
+trigger6=p2stateno=3100
+trigger7=enemy(var(0)),time<31
+trigger7=p2stateno=3300
+trigger8=p2stateno=810
+fvar(38)=5
+ignorehitpause=1
+[state -3];相手無敵判定
+type=varset
+triggerall=numenemy
+triggerall=p2name="Aoko Aozaki"
+trigger1=enemy(var(0)),time<74
+trigger1=p2stateno=1100
+trigger2=anim=1120||anim=1121&&enemy(var(0)),time<146
+trigger2=p2stateno=1120
+trigger3=enemy(var(0)),time<124
+trigger3=p2stateno=1200
+trigger4=enemy(var(0)),time<6
+trigger4=p2stateno=1022
+trigger5=enemy(var(0)),time<8
+trigger5=p2stateno=1037||p2stateno=1042||p2stateno=1062||p2stateno=1072||p2stateno=1082||p2stateno=1092
+trigger6=p2stateno=105
+trigger6=enemy(var(0)),time>7
+trigger7=p2stateno=801||p2stateno=806||p2stateno=811
+fvar(38)=5
+ignorehitpause=1
+;mugen内部処理、AIのキー入力阻止
+[state -3]
+type=changestate
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=prevstateno!=130
+triggerall=prevstateno!=131
+triggerall=stateno=40
+triggerall=pos y>=0
+triggerall=roundstate=2
+trigger1=!time
+value=0
+ctrl=1
+[state -3]
+type=changestate
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=prevstateno!=52
+triggerall=stateno=20
+triggerall=pos y>=0
+triggerall=roundstate=2
+trigger1=!time
+value=0
+ctrl=1
+[state -3]
+type=changestate
+triggerall=!ishelper
+triggerall=var(59)
+triggerall=prevstateno!=52
+triggerall=pos y>=0
+triggerall=roundstate=2
+triggerall=!time
+trigger1=prevstateno=0||(prevstateno=[20,22])||(prevstateno=[100,101])||(prevstateno=[120,140])
+trigger1=stateno=10
+value=0
+ctrl=1

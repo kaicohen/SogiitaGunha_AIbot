@@ -1,0 +1,126 @@
+『削板軍覇』に使われている変数のアドレス早見表です。
+何も説明が書いてない部分は未使用。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■整数の変数■
+
+ Var(0)  = enemy(0),enemy(1)用
+ Var(1)  = すごいガードエフェクト設定用
+ Var(2)  = シールド制御変数
+ Var(3)  = 根性ゲージX軸設定
+ Var(4)  = 根性ゲージY軸設定
+ Var(5)  = 根性カウントX軸設定
+ Var(6)  = 根性カウントY軸設定
+ Var(7)  = 
+ Var(8)  = 
+ Var(9)  = 
+
+ Var(10) = 
+ Var(11) = 補正ランクセット用
+ Var(12) = 
+ Var(13) = 
+ Var(14) = 
+ Var(15) = 
+ Var(16) = 
+ Var(17) = 
+ Var(18) = 
+ Var(19) = 
+
+ Var(20) = 
+ Var(21) = 
+ Var(22) = 
+ Var(23) = 
+ Var(24) = 敵maxvel
+ Var(25) = 敵maxvel
+ Var(26) = 敵機動力指標0
+ Var(27) = 敵機動力指標1
+ Var(28) = mugenキー入力バグフラグ（AI暴発阻止用）
+ Var(29) = var(39)までroundstate!=2でhelper変数持ち越し
+
+ Var(30) = 
+ Var(31) = 
+ Var(32) = 
+ Var(33) = 
+ Var(34) = 
+ Var(35) = 
+ Var(36) = 
+ Var(37) = 
+ Var(38) = 
+ Var(39) = var(29)までroundstate!=2でhelper変数持ち越し
+
+ Var(40) = 根性カウント
+ Var(41) = 小パンチ切り返された
+ Var(42) = 相手の攻撃判定までのtime
+ Var(43) = 敵のWinカウント
+ Var(44) = Winフラグ記録
+ Var(45) = 1ゲージマッハ投げ後の行動制御
+ Var(46) = 特殊な場合のジャンプ方向制御
+ Var(47) = enemy(var(0)),hitpausetime>0中のenemy(var(0)),vel x補正用
+ Var(48) = AI技振り制御補助
+ Var(49) = AI空中ジャンプ制限
+
+ Var(50) = 時止察知
+ Var(51) = 敵helper x距離
+ Var(52) = 敵helper y距離
+ Var(53) = すごパキャンセル経由用
+ Var(54) = 記述補助temp
+ Var(55) = 相手との向き
+ Var(56) = inguarddist補助
+ Var(57) = inguarddist補助
+ Var(58) = 当て身学習したstateに相手がいる;=5
+ Var(59) = AIスイッチ
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■小数点以下も使える変数■（浮動小数点数を使用）
+
+FVar(0)  = 根性ゲージ用
+FVar(1)  = コンボ補正用
+FVar(2)  = 
+FVar(3)  = 根性ゲージ最大値設定
+FVar(4)  = 
+FVar(5)  = 
+FVar(6)  = 
+FVar(7)  = 
+FVar(8)  = 
+FVar(9)  = 
+
+FVar(10) = 
+FVar(11) = 
+FVar(12) = 
+FVar(13) = 
+FVar(14) = 
+FVar(15) = 
+FVar(16) = 
+FVar(17) = 
+FVar(18) = 
+FVar(19) = 
+
+FVar(20) = 
+FVar(21) = 
+FVar(22) = 
+FVar(23) = 
+FVar(24) = 
+FVar(25) = 
+FVar(26) = 
+FVar(27) = 
+FVar(28) = 
+FVar(29) = 
+
+FVar(30) = 
+FVar(31) = 
+FVar(32) = 
+FVar(33) = 
+FVar(34) = 
+FVar(35) = 
+FVar(36) = 
+FVar(37) = 
+FVar(38) = 無敵系p2name
+FVar(39) = 
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■チャンネル■
+
+channel = 0 : 声のチャンネル
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+by ふがく
