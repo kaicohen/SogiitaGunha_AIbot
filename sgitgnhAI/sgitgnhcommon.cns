@@ -1130,6 +1130,7 @@ trigger2=!(var(56)&&var(57))
 trigger3=(helper(21000),var(2)<enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0)
 trigger3=!inguarddist
 trigger3=helper(30000),sysvar(4)=0||(helper(30000),sysvar(4)!=0&&((var(51)!=[-111,300])||(var(52)!=[-190,190])))
+trigger4=2**9=4096&&helper(200200200),sysvar(0)
 value=140
 ;---------------------------------------------------------------------------
 ; STAND GUARD (guarding)
@@ -1180,6 +1181,7 @@ trigger2=!(var(56)&&var(57))
 trigger3=(helper(21000),var(2)<enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0)
 trigger3=!inguarddist
 trigger3=helper(30000),sysvar(4)=0||(helper(30000),sysvar(4)!=0&&((var(51)!=[-111,300])||(var(52)!=[-190,190])))
+trigger4=2**9=4096&&helper(200200200),sysvar(0)
 value=140
 ;---------------------------------------------------------------------------
 ; CROUCH GUARD (guarding)
@@ -1230,6 +1232,7 @@ trigger2=!(var(56)&&var(57))
 trigger3=(helper(21000),var(2)<enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0)
 trigger3=!inguarddist
 trigger3=helper(30000),sysvar(4)=0||(helper(30000),sysvar(4)!=0&&((var(51)!=[-111,300])||(var(52)!=[-190,190])))
+trigger4=2**9=4096&&helper(200200200),sysvar(0)
 value=140
 ;---------------------------------------------------------------------------
 ; AIR GUARD (guarding)
@@ -1286,6 +1289,7 @@ trigger2=!(var(56)&&var(57))
 trigger3=(helper(21000),var(2)<enemy(var(0)),numhelper||helper(30000),sysvar(4)!=0)
 trigger3=!inguarddist
 trigger3=helper(30000),sysvar(4)=0||(helper(30000),sysvar(4)!=0&&((var(51)!=[-111,300])||(var(52)!=[-190,190])))
+trigger4=2**9=4096&&helper(200200200),sysvar(0)
 value=140
 ;---------------------------------------------------------------------------
 ; GUARD (end)
@@ -1940,6 +1944,7 @@ type=s
 ctrl=0
 anim=190+(random>=500)
 velset=0,0
+
 [state 191,アニメ変更];バトル画面に切り替わった瞬間のフェードインの時、アニメを固定している
 type=changeanim
 trigger1=roundstate=0
@@ -3482,12 +3487,25 @@ ctrl=1
 ;---------------------------------------------------------------------------
 ; HIT_LIEDEAD
 [statedef 5150]
+type=u
+movetype=u
+physics=u
+sprpriority=-3
+
+[state ]
+type=null
+trigger1=1
+
+[state ]
+type=statetypeset
+trigger1=!ishelper
 type=l
 movetype=h
 physics=n
-sprpriority=-3
+
 [state 5150,1];Normal anim
 type=changeanim
+triggerall=!ishelper
 triggerall=time=0
 triggerall=selfanimexist(5140)
 trigger1=(anim!=[5111,5119])&&(anim!=[5171,5179])
@@ -3495,12 +3513,14 @@ trigger2=!selfanimexist(5140+(anim%10))
 value=5140
 [state 5150,3];Hit up type anim
 type=changeanim
+triggerall=!ishelper
 trigger1=time=0
 trigger1=(anim=[5111,5119])||(anim=[5171,5179])
 trigger1=selfanimexist(5140+(anim%10))
 value=5140+(anim%10)
 [state 5150,4];Match over anim
 type=changeanim
+triggerall=!ishelper
 persistent=0
 ;trigger1 = Time = 0
 trigger1=matchover=1
@@ -3509,21 +3529,25 @@ trigger1=selfanimexist(anim+10)
 value=anim+10
 [state 5150,5];Switch to 5110 if liedead anim does not exist
 type=changeanim
+triggerall=!ishelper
 trigger1=time=0
 trigger1=anim!=[5140,5159]
 trigger1=anim!=[5110,5119]
 value=5110
 [state 5150,6];Friction
 type=velmul
+triggerall=!ishelper
 trigger1=1
 x=0.85
 [state 5150,7];Friction
 type=velset
+triggerall=!ishelper
 trigger1=vel x<.05
 persistent=0
 x=0
 [state 5150,8]
 type=nothitby
+triggerall=!ishelper
 trigger1=1
 value=sca
 time=1

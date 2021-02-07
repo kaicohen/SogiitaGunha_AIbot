@@ -1,0 +1,753 @@
+;*********************************************************
+;被弾
+;*********************************************************
+[statedef 133133133]
+anim = 1000200
+movetype = I
+
+[state ]
+type = hitby
+trigger1 = 1
+value = SCA,AA
+ignorehitpause = 1
+
+[state ,時止め]
+type = pause
+trigger1 = ishelper(133133133)
+time = 2147483647
+movetime = 2147483647
+ignorehitpause = 1
+
+[state ,時止め]
+type = superpause
+trigger1 = ishelper(133133133)
+time = 2147483647
+movetime = 2147483647
+unhittable = 0
+anim = -1
+darken = 0
+ignorehitpause = 1
+
+[state ,時止め解除]
+type = pause
+trigger1 = ishelper(133133133)
+trigger1 = helper(200200200),sysvar(0)
+time = 0
+movetime = 2147483647
+ignorehitpause = 1
+
+[state ,時止め解除]
+type = superpause
+trigger1 = ishelper(133133133)
+trigger1 = helper(200200200),sysvar(0)
+time = 0
+movetime = 2147483647
+unhittable = 0
+anim = -1
+darken = 0
+ignorehitpause = 1
+
+[state ]
+type = destroyself
+trigger1 = helper(200200200),sysvar(0)
+ignorehitpause = 1
+
+[state ]
+type=selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;*********************************************************
+;親捏造領域確保
+;*********************************************************
+[statedef 177177177]
+movetype = I
+;このヘルパーから出すヘルパーを使ってアドレス取得を行います
+;召喚してから2Fで消えるようにします
+
+[state ]
+type = changeanim
+trigger1 = anim != 1000000
+trigger1 = helper(200200200),sysvar(0);root,numprojID(200200200)
+value = 1000000
+ignorehitpause = 1
+
+[state ];親捏造するヘルパーを召喚
+type = helper
+trigger1 = anim != 1000000
+ID = 166166166
+helpertype = player
+pos=0,-10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+
+------
+
+[state ]
+type = destroyself
+triggerall = sysvar(4)!=2
+trigger1 = anim = 1000000
+ignorehitpause = 1
+
+[state ]
+type = screenbound
+trigger1 = 1
+value = 0
+ignorehitpause = 1
+
+[state ]
+type = changeanim
+trigger1 = anim != 1000000
+value = 1000000
+ignorehitpause = 1
+
+[state ]
+type=null;selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;*********************************************************
+;親捏造ヘルパー
+;*********************************************************
+[statedef 166166000]
+anim = 1000100
+movetype = A
+movehitpersist = 1
+;hitdefpersist = 1
+
+[state ]
+type=AttackDist
+trigger1=1
+value=0
+
+[state ]
+type = screenbound
+trigger1 = 1
+value = 0
+ignorehitpause = 1
+
+;親捏造に失敗するか、既に別のヘルパーが親捏造に成功していたら消えます。;
+[state ]
+type = destroyself
+trigger1 = sysvar(0)
+trigger2 = helper(200200200),sysvar(0);root,numprojID(200200200)
+ignorehitpause = 1
+
+;ステコンオバフロ読み込みのためhitpausetimeを付与します
+[state ]
+type = hitdef
+trigger1 = !hitpausetime
+attr = ,NA
+pausetime = 999999,0
+affectteam = F
+Guard.Dist = 0
+NumHits = 0
+
+[state ,];親捏造処理ステートへ
+type = changestate
+trigger1 = hitpausetime
+trigger1 = !root,numprojID(200200200)
+trigger1 = !sysvar(0)
+value = 166166004
+ignorehitpause = 1
+persistent = 256
+
+[state ]
+type = displaytoclipboard
+trigger1 = ishelper
+text = "hitpause:%d,sv(0):%d,var(1):%d \n"
+params = hitpausetime , sysvar(0) , var(1)
+ignorehitpause = 1
+
+[state ]
+type=null;selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;========================================
+;親捏造処理ステート
+;========================================
+[statedef 166166004]
+movehitpersist = 1
+;hitdefpersist = 1
+
+[state ]
+type=AttackDist
+trigger1=1
+value=0
+
+;parentの参照先を5888増やすとparent,var(56)でparentのヘルパーのparent参照先の情報を見れます。
+;この場合取得できるのは最終ヘルパーのアドレスです。
+[state 親のヘルパーIDを保存]
+type = null
+trigger1  = ishelper(166166166)
+trigger1  = var(0) := 177177177 || 1
+ignorehitpause = 1
+
+[State 9321101, 親捏造ステコンオバフロステートへ]
+type = SelfState
+value = 166166005
+triggerall = hitpausetime
+triggerall = sysvar(0) = 0  ;親捏造実行済みでない
+trigger1 = var(1) = [0,104]  ;(=128-23)
+trigger1 = var(1) := var(1)+1
+persistent = 256
+ignorehitpause = 1
+
+[State , 影のParent,IDリセットステートへ]
+type = SelfState
+value =166166006
+triggerall = hitpausetime
+triggerall = sysvar(0) = 0  ;親捏造実行済みでない
+trigger1 = var(2) = [0,260]  ;260回ループ
+trigger1 = var(2) := var(2)+1
+persistent = 256
+ignorehitpause = 1
+
+[State , 親捏造ステコンオバフロステート読み込み済みフラグ]
+type = VarSet
+trigger1 = PrevStateNo = 166166006
+sysvar(0) = 1
+ignorehitpause = 1
+
+[State , 親のHelperID変更用変数いじり]
+type = ParentVarAdd
+var(54) = 1
+trigger1 = sysvar(0) = 1  ;ステコンオバフロ読み込み済み
+trigger1 = var(2) := NumHelper(var(0)) || 1  ;親と同じHelperIDのヘルパーの数をvar(2)に保存
+ignorehitpause = 1
+
+[State , 親のHelperID変更成否判定]
+type = VarSet
+sysvar(0) = ifelse( NumHelper(var(0))=var(2), -1, 2 )  ;親のHelperIDを変更できなかったら-1
+trigger1 = sysvar(0) = 1  ;ステコンオバフロ読み込み済み
+ignorehitpause = 1
+
+[State , いじった部分を元に戻す]
+type = ParentVarAdd
+var(54) = -1
+trigger1 = sysvar(0) = 2 || sysvar(0) = -1  ;ステコンオバフロ読み込み済み
+ignorehitpause = 1
+;  1加算して-1すれば失敗してもアドレスの値を全く同じにすることが可能
+
+[State , 1回しか読み込まないように]
+type = VarSet
+sysvar(0) = sysvar(0) *2
+trigger1 = sysvar(0) = 2 || sysvar(0) = -1  ;ステコンオバフロ読み込み済み
+ignorehitpause = 1
+
+[state ,失敗したら戻る]
+type = changestate
+trigger1 = sysvar(0) != 4
+value = 166166000
+ignorehitpause = 1
+persistent = 256
+
+[state ,調査完了ステートへ]
+type = changestate
+trigger1 = 1
+value = 166166010
+ignorehitpause = 1
+persistent = 256
+
+[state ]
+type=null;selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;========================================
+;アドレス調査完了ステート
+;========================================
+[statedef 166166010]
+movehitpersist = 1
+;hitdefpersist = 1
+
+[state ]
+type=AttackDist
+trigger1=1
+value=0
+
+;最終ヘルパーの先頭アドレスをsysvarに保存します。
+[state ,parent参照先]
+type = varset
+trigger1 = sysvar(0) = 4
+trigger1 = !sysvar(1)
+sysvar(1) = parent,var(56)
+ignorehitpause = 1
+
+;rootアドレスをsysvarに保存します。
+[state ,parent参照先]
+type = varset
+trigger1 = sysvar(0) = 4
+trigger1 = !sysvar(2)
+sysvar(2) = parent,var(57)
+ignorehitpause = 1
+
+;取得したアドレスを使い最終ヘルパーのpalno領域にアドレスの数値を書き込みます。
+;変数に保存した場合親変更を食らうと落ちてしまうので通常弄れないpalnoを使います。
+;
+;ただし、palnoに保存すると例外的に数値が1増えてしまうのでその分を補正します。
+;(基本的に他の領域では数値が増えたりすることはありません)
+;root
+[State , 代入下1桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(2)-1)&255), 0, sysvar(1)+5060
+ignorehitpause = 1
+[State , 代入下2桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(2)-1)&255*256)/256, 0, sysvar(1)+5061
+ignorehitpause = 1
+[State , 代入下3桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(2)-1)&255*256*256)/(256*256), 0, sysvar(1)+5062
+ignorehitpause = 1
+[State , 代入下4桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = (((sysvar(2)-1)<0)*128+(sysvar(2)-1)&127*256*256*256)/(256*256*256), 0, sysvar(1)+5063
+ignorehitpause = 1
+
+;もとヘルパー自身
+;const(data.airjuggle)
+[State , 代入下1桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(1))&255), 0, sysvar(1)+100
+ignorehitpause = 1
+[State , 代入下2桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(1))&255*256)/256, 0, sysvar(1)+101
+ignorehitpause = 1
+[State , 代入下3桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = ((sysvar(1))&255*256*256)/(256*256), 0, sysvar(1)+102
+ignorehitpause = 1
+[State , 代入下4桁]
+type = DisplayToClipBoard
+trigger1 = 1
+text = "%.*d%n%d"
+params = (((sysvar(1))<0)*128+(sysvar(1))&127*256*256*256)/(256*256*256), 0, sysvar(1)+103
+ignorehitpause = 1
+
+;アドレスが取得できたフラグ用のprojを出します。
+[state ]
+type = null;projectile
+trigger1 = 1
+projID = 200200200
+projanim = 1000000
+attr = S,NA
+NumHits=0
+projremovetime = -1
+pausemovetime = 99999999
+supermovetime = 99999999
+ignorehitpause = 1
+
+[state ]
+type=null;selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;*********************************************************
+;捏造もとヘルパー
+;*********************************************************
+[statedef 200200200]
+anim = 1000000
+movetype = I
+
+[state ]
+type = screenbound
+trigger1 = 1
+value = 0
+ignorehitpause = 1
+
+;[State , pausemovetime付与]
+;type = DisplayToClipBoard
+;trigger1 = root,numprojID(200200200)
+;text = "%.*d%n%d"
+;params = 255, 0, palno + 476
+;ignorehitpause = 1
+;[State , supermovetime付与]
+;type = DisplayToClipBoard
+;trigger1 = root,numprojID(200200200)
+;text = "%.*d%n%d"
+;params = 255, 0, palno + 480
+;ignorehitpause = 1
+
+[state ];root
+type=varset
+trigger1=1
+trigger1=palno!=[0,12]
+sysvar(0)=99
+
+[state ];自分
+type=varset
+trigger1=1
+var(21)=const(data.airjuggle)
+
+;-----
+
+;-----ここに書く
+;var(20)に1,test用
+[state ]
+type = null;DisplayToClipBoard
+trigger1 = sysvar(0);root,numprojID(200200200)
+trigger1 = roundstate = 2
+text = "%.*d%n%d"
+params = 11, 0, const(data.airjuggle)+3728
+ignorehitpause = 1
+
+;ガードステート作成
+;テスト用
+[state ]
+type = null;DisplayToClipBoard
+trigger1 = sysvar(0)
+trigger1 = roundstate = 2
+trigger1 = root,stateno != [120,156]
+text = "%.*d%n%d"
+params = 1, 0, (palno)+3600
+ignorehitpause = 1
+
+;ガードステート作成
+;AI用(winmugen)
+;ガードステート解除
+[state ]
+type = DisplayToClipBoard
+triggerall = sysvar(0)
+triggerall = roundstate = 2
+triggerall = root,var(59)>0
+triggerall = root,alive
+trigger1 = root,stateno != [120,156]
+text = "%.*d%n%d"
+params = 0, 0, (palno)+3600
+ignorehitpause = 1
+
+;行動可能時、ガードステート
+[state ]
+type = DisplayToClipBoard
+triggerall=sysvar(0)
+triggerall=roundstate = 2
+triggerall=root,var(59)>0
+triggerall=root,alive
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,ctrl||(root,stateno=52&&root,animtime=0)||(root,stateno=100&&root,time<10)
+triggerall=root,stateno != [120,156]
+triggerall=root,fvar(0)>0
+trigger1=root,prevstateno=[120,140]
+trigger1=helper(21000),var(1)||(helper(21000),var(0)=1&&enemy(root,var(0)),movetype=a&&!(root,inguarddist))
+trigger1=root,stateno!=[120,140]
+trigger2=root,inguarddist
+trigger2=random<root,var(59)*root,var(59)*111+300||(enemy(root,var(0)),movetype=a&&enemy(root,var(0)),time>8+(random%4)-(random%4))
+trigger3=numhelper(21000)
+trigger3=helper(21000),var(0)=1&&(random<(350+(root,var(59)*100)))
+trigger3=!(root,inguarddist)&&enemy(root,var(0)),movetype=a
+trigger4=root,prevstateno=[5000,5270]
+trigger5=helper(30000),sysvar(4)!=0&&(root,var(51)=[-85,85])&&(root,var(52)=[-100,70])
+trigger6=numhelper(21000)
+trigger6=helper(21000),var(4)&&helper(21000),var(1)
+trigger7=random<root,var(59)*root,var(59)*20
+text = "%.*d%n%d"
+params = 1, 0, (palno)+3600
+ignorehitpause = 1
+
+;行動可能時、ガードステート
+[state ]
+type = DisplayToClipBoard
+triggerall=sysvar(0)
+triggerall=roundstate = 2
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,stateno != [120,156]
+triggerall=root,var(59)&&root,alive&&playeridexist(helper(21000),var(58))
+triggerall=root,ctrl||(root,stateno=52&&root,animtime=0)||root,stateno=100
+triggerall=!(root,inguarddist)
+triggerall=(root,stateno!=[120,140])||root,stateno=140&&time=1
+triggerall=random<root,var(59)*150||(enemy(root,var(0)),movetype=a&&enemy(var(0)),time>8+(random%4)-(random%4))
+triggerall=root,fvar(0)>0
+triggerall=root,var(2)=0
+trigger1=(playerid(helper(21000),var(58)),vel x>1)||(playerid(helper(21000),var(58)),vel y>3)
+trigger1=playerid(helper(21000),var(58)),hitdefattr=sc,aa
+text = "%.*d%n%d"
+params = 1, 0, (palno)+3600
+ignorehitpause = 1
+
+[state -1,ガード]
+type=varset
+triggerall=sysvar(0)
+triggerall=roundstate=2
+triggerall=root,var(59)&&root,alive&&playeridexist(helper(21000),var(58))
+triggerall=root,ctrl||(root,stateno=52&&root,animtime=0)||root,stateno=100
+triggerall=root,fvar(0)>0
+triggerall=!(enemy(root,var(0)),hitdefattr=sca,nt,st,ht)
+triggerall=root,var(2)=0
+triggerall=(root,stateno!=[120,140])||(root,stateno=140&&helper(21000),var(0)=1)||(root,stateno=140&&time=1)
+trigger1=root,prevstateno=[120,140]
+trigger1=helper(21000),var(1)||(helper(21000),var(0)=1&&enemy(root,var(0)),movetype=a&&!(root,inguarddist))
+trigger1=root,stateno!=[120,140]
+trigger2=root,inguarddist
+trigger2=random<root,var(59)*root,var(59)*111+300||(enemy(root,var(0)),movetype=a&&enemy(root,var(0)),time>8+(random%4)-(random%4))
+trigger3=numhelper(21000)
+trigger3=helper(21000),var(0)=1&&(random<(350+(root,var(59)*100)))
+trigger3=!(root,inguarddist)&&enemy(root,var(0)),movetype=a
+trigger4=root,prevstateno=[5000,5270]
+trigger5=1;(enemy(var(0)),numproj>=1&&(var(56)=1&&var(57)=1))||(((enemy(var(0)),numhelper>helper(21000),var(2))&&(var(56)=1&&var(57)=1)&&var(59)<2)||helper(30000),sysvar(4)!=0&&(var(51)=[-85,85])&&(var(52)=[-100,70]))
+trigger5=helper(30000),sysvar(4)!=0&&(root,var(51)=[-85,85])&&(root,var(52)=[-100,70])
+trigger6=numhelper(21000)
+trigger6=helper(21000),var(4)&&helper(21000),var(1)
+sysvar(1)=1
+
+[state -1,突進系対策ガード]
+type=varset
+triggerall=sysvar(0)
+triggerall=roundstate=2
+triggerall=root,var(59)&&root,alive&&playeridexist(helper(21000),var(58))
+triggerall=root,ctrl||(root,stateno=52&&root,animtime=0)||root,stateno=100
+triggerall=!(root,inguarddist)
+triggerall=(root,stateno!=[120,140])||root,stateno=140&&time=1
+triggerall=random<root,var(59)*150||(enemy(root,var(0)),movetype=a&&enemy(var(0)),time>8+(random%4)-(random%4))
+triggerall=root,fvar(0)>0
+triggerall=!(enemy(root,var(0)),hitdefattr=sca,nt,st,ht)
+triggerall=root,var(2)=0
+trigger1=(playerid(helper(21000),var(58)),vel x>1)||(playerid(helper(21000),var(58)),vel y>3)
+trigger1=playerid(helper(21000),var(58)),hitdefattr=sc,aa
+sysvar(1)=1
+
+[state -1,HitoLo(AI)]
+type=DisplayToClipBoard
+triggerall=sysvar(0)
+triggerall=sysvar(1)=1
+triggerall=roundstate=2
+triggerall=root,var(59)>0
+triggerall=root,alive
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,statetype=s
+triggerall=root,stateno!=[120,156]
+triggerall=enemy(root,var(0)),statetype!=a
+triggerall=numhelper(21000)
+triggerall=playeridexist(helper(21000),var(58))
+triggerall=helper(21000),var(52)=0||helper(21000),var(52)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(53)=0||helper(21000),var(53)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(54)=0||helper(21000),var(54)!=playerid(helper(21000),var(58)),stateno
+triggerall=numhelper(30000)
+triggerall=helper(30000),sysvar(3)!=3
+trigger1=enemy(root,var(0)),statetype=c||enemy(root,var(0)),statetype=s&&enemy(root,var(0)),hitdefattr=sc,aa,ap&&enemy(root,var(0)),time<10
+trigger2=helper(21000),var(55)!=0&&helper(21000),var(55)=playerid(helper(21000),var(58)),stateno
+trigger2=helper(21000),var(56)!=0&&helper(21000),var(56)=playerid(helper(21000),var(58)),stateno
+trigger2=helper(21000),var(57)!=0&&helper(21000),var(57)=playerid(helper(21000),var(58)),stateno
+text = "%.*d%n%d"
+params = 2, 0, (palno)+3584
+ignorehitpause = 1
+
+[state -1,HitoLo(AI)]
+type=DisplayToClipBoard
+triggerall=sysvar(0)
+triggerall=sysvar(1)=1
+triggerall=roundstate=2
+triggerall=root,var(59)>0
+triggerall=root,alive
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,statetype=s
+triggerall=root,stateno!=[120,156]
+triggerall=enemy(root,var(0)),statetype!=a
+triggerall=numhelper(21000)
+triggerall=playeridexist(helper(21000),var(58))
+triggerall=helper(21000),var(52)=0||helper(21000),var(52)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(53)=0||helper(21000),var(53)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(54)=0||helper(21000),var(54)!=playerid(helper(21000),var(58)),stateno
+triggerall=numhelper(30000)
+triggerall=helper(30000),sysvar(3)!=3
+trigger1=enemy(root,var(0)),statetype=c||enemy(root,var(0)),statetype=s&&enemy(root,var(0)),hitdefattr=sc,aa,ap&&enemy(root,var(0)),time<10
+trigger2=helper(21000),var(55)!=0&&helper(21000),var(55)=playerid(helper(21000),var(58)),stateno
+trigger2=helper(21000),var(56)!=0&&helper(21000),var(56)=playerid(helper(21000),var(58)),stateno
+trigger2=helper(21000),var(57)!=0&&helper(21000),var(57)=playerid(helper(21000),var(58)),stateno
+text = "%.*d%n%d"
+params = 2, 0, (palno)+3592
+ignorehitpause = 1
+
+[state -1,LotoHi(AI)]
+type=statetypeset
+triggerall=sysvar(0)
+triggerall=sysvar(1)=1
+triggerall=roundstate=2
+triggerall=root,var(59)>0
+triggerall=root,alive
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,statetype=c
+triggerall=root,stateno!=[120,156]
+triggerall=numhelper(21000)
+triggerall=playeridexist(helper(21000),var(58))
+triggerall=helper(21000),var(55)=0||helper(21000),var(55)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(56)=0||helper(21000),var(56)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(57)=0||helper(21000),var(57)!=playerid(helper(21000),var(58)),stateno
+trigger1=enemy(root,var(0)),statetype=a
+trigger2=helper(21000),var(52)!=0&&helper(21000),var(52)=playerid(helper(21000),var(58)),stateno
+trigger3=helper(21000),var(53)!=0&&helper(21000),var(53)=playerid(helper(21000),var(58)),stateno
+trigger4=helper(21000),var(54)!=0&&helper(21000),var(54)=playerid(helper(21000),var(58)),stateno
+trigger5=numhelper(30000)
+trigger5=helper(30000),sysvar(3)=3
+trigger6=enemy(root,var(0)),statetype!=c&&enemy(root,var(0)),hitdefattr=s,aa,ap&&enemy(root,var(0)),time>=10
+text = "%.*d%n%d"
+params = 1, 0, (palno)+3584
+ignorehitpause = 1
+
+[state -1,LotoHi(AI)]
+type=statetypeset
+triggerall=sysvar(0)
+triggerall=sysvar(1)=1
+triggerall=roundstate=2
+triggerall=root,var(59)>0
+triggerall=root,alive
+triggerall=root,sysvar(3)=gametime-3156
+triggerall=root,statetype=c
+triggerall=root,stateno!=[120,156]
+triggerall=numhelper(21000)
+triggerall=playeridexist(helper(21000),var(58))
+triggerall=helper(21000),var(55)=0||helper(21000),var(55)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(56)=0||helper(21000),var(56)!=playerid(helper(21000),var(58)),stateno
+triggerall=helper(21000),var(57)=0||helper(21000),var(57)!=playerid(helper(21000),var(58)),stateno
+trigger1=enemy(root,var(0)),statetype=a
+trigger2=helper(21000),var(52)!=0&&helper(21000),var(52)=playerid(helper(21000),var(58)),stateno
+trigger3=helper(21000),var(53)!=0&&helper(21000),var(53)=playerid(helper(21000),var(58)),stateno
+trigger4=helper(21000),var(54)!=0&&helper(21000),var(54)=playerid(helper(21000),var(58)),stateno
+trigger5=numhelper(30000)
+trigger5=helper(30000),sysvar(3)=3
+trigger6=enemy(root,var(0)),statetype!=c&&enemy(root,var(0)),hitdefattr=s,aa,ap&&enemy(root,var(0)),time>=10
+text = "%.*d%n%d"
+params = 1, 0, (palno)+3592
+ignorehitpause = 1
+
+[state ]
+type=varset
+trigger1=1
+sysvar(1)=0
+
+;-----
+
+[state ,親捏造ヘルパー召喚]
+type = changestate
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+trigger1 = prevstateno != 200200201
+trigger1 = numhelper(133133133)
+value = 200200201
+ignorehitpause = 1
+persistent = 256
+
+[state ]
+type = displaytoclipboard
+trigger1 = ishelper
+text = "address:%p \n"
+params = palno 
+ignorehitpause = 1
+
+[state ]
+type=selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+;*********************************************************
+[statedef 200200201]
+;親捏造で捏造もとヘルパーのアドレスを取得するためのヘルパーを召喚します。
+
+[state ];失敗回数
+type=varset
+trigger1=var(41)<2000
+var(41)=var(41)+1
+
+[state ];親捏造用ヘルパー召喚
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+;trigger1 = var(41)>10
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+;trigger1 = var(41)>20
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+;trigger1 = var(41)>30
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+;trigger1 = var(41)>40
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+[state ]
+type = helper
+trigger1 = !sysvar(0);!root,numprojID(200200200)
+;trigger1 = var(41)>50
+ID = 177177177
+helpertype = player
+pos=0,10000
+pausemovetime = 9999999
+supermovetime = 9999999
+ignorehitpause = 1
+
+[state ,親捏造ヘルパー召喚]
+type = changestate
+trigger1 = 1
+value = 200200200
+ignorehitpause = 1
+persistent = 256

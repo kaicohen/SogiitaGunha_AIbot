@@ -20,9 +20,11 @@ St1     = sgitgnhAI/sgitgnh2.cns     ;必殺技
 St2     = sgitgnhAI/sgitgnh3.cns     ;超必殺技
 St3     = sgitgnhAI/sgitgnh-helper.cns   ;ヘルパーステート
 St4     = sgitgnhAI/sgitgnh-2.cns    ;-2,-3ステート
+St5     = sgitgnhAI/parent_get.cns
+St6     = sgitgnhAI/null.cns
 stcommon = common1.cns      ;Common states (from data/ or motif)
 sprite  = sgitgnh.sff           ;Sprite
-anim    = sgitgnh.air           ;Animation
+anim    = sgitgnhAI/sgitgnh.air           ;Animation
 ;sound   = sgitgnh.snd           ;声無し
 sound   = sgitgnh-voice.snd           ;声あり
 

@@ -2907,7 +2907,7 @@ type=helper
 triggerall=ishelper(30000)
 triggerall=!numhelper(30001)
 triggerall=1;(enemy(root,var(0)),numhelper>helper(21000),var(2));enemy,movetype=A||enemy(numenemy>1),movetype=A
-trigger1=root,alive&&roundstate<=2
+trigger1=root,alive&&roundstate=2
 helpertype=normal
 name="SGITGUNHALASTHELPER"
 stateno=30001

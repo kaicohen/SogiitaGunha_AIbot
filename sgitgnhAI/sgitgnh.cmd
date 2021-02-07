@@ -3409,6 +3409,7 @@ value=120
 triggerall=!ishelper
 triggerall=roundstate=2
 triggerall=var(59)&&roundstate=2&&alive&&!ishelper&&playeridexist(helper(21000),var(58))
+triggerall=2**9!=4096||!helper(200200200),sysvar(0)
 triggerall=ctrl||(stateno=52&&animtime=0)||stateno=100
 triggerall=fvar(0)>0
 triggerall=!(enemy(var(0)),hitdefattr=sca,nt,st,ht)
@@ -3434,6 +3435,7 @@ value=120
 triggerall=!ishelper
 triggerall=roundstate=2
 triggerall=var(59)&&roundstate=2&&alive&&!ishelper&&playeridexist(helper(21000),var(58))
+triggerall=2**9!=4096||!helper(200200200),sysvar(0)
 triggerall=ctrl||(stateno=52&&animtime=0)||stateno=100
 triggerall=!inguarddist
 triggerall=(stateno!=[120,140])||stateno=140&&time=1
