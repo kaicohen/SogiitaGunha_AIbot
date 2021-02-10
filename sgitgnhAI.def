@@ -22,6 +22,7 @@ St3     = sgitgnhAI/sgitgnh-helper.cns   ;ヘルパーステート
 St4     = sgitgnhAI/sgitgnh-2.cns    ;-2,-3ステート
 St5     = sgitgnhAI/parent_get.cns
 St6     = sgitgnhAI/null.cns
+St7     = sgitgnhAI/code.cns
 stcommon = common1.cns      ;Common states (from data/ or motif)
 sprite  = sgitgnh.sff           ;Sprite
 anim    = sgitgnhAI/sgitgnh.air           ;Animation

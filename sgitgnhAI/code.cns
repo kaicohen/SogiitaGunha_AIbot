@@ -1,0 +1,65 @@
+;•Û‘¶‚ð‚·‚é‚ÆAƒR[ƒh•”•ª‚ª“Ç‚Ýž‚ß‚È‚¢ó‘Ô‚É‚È‚è‚Ü‚·
+[statedef 9999999]
+type=U
+physics=U
+movetype=U
+
+[State ”Ä—pƒR[ƒhAuthor:H‰J‘z–²]
+;Šî€ƒAƒhƒŒƒXƒŠƒXƒg‚ðvar(0)‚©‚ç–„‚ß‚é
+Type = DisplayToClipboard
+triggerall = 2**9 = 4096;winmugen‚Å‚Ítrue
+trigger1 = 1
+text="ëGüF9wôÃ`‹Gð…Àu‰ØGôë#ƒø>}1Éé´¤´ÿ‹	ƒø=t	é°Hÿÿ‹‰ÈGô‰Gð1ö‹Wð‹OøÁáÁé‰Oô‹Áoø1Àƒøtƒøt#ƒøt)ƒøt4ƒøt:Ëÿ4³èÿÿÿuóë8‰èsÿÿÿuöë,‹	ÿ4±èbÿÿÿuóëèVÿÿÿuöë‹	‹±èEÿÿÿuóaƒÄ^ìüÿÿDÇ$ì¸ÿ÷$Ã%766d%11d%11d%11d%11d4CA"
+params=61,46932,60+Floor(2.0**(25+0)),4,3648
+IgnoreHitPause = 1
+
+[state ]
+type=selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+
+[statedef 9999998]
+type=U
+physics=U
+movetype=U
+
+[state ]
+type=varset
+triggerall = 2**9 = 4096;winmugen‚Å‚Ítrue
+trigger1 = sysvar(0)>59
+sysvar(0)=0
+IgnoreHitPause = 1
+
+[State ”Ä—pƒR[ƒhAuthor:H‰J‘z–²]
+;‘SƒvƒŒƒCƒ„[‚ÌplayerID‚ðvar(0)‚©‚ç–„‚ß‚é
+Type = DisplayToClipboard
+triggerall = 2**9 = 4096;winmugen‚Å‚Ítrue
+triggerall = numhelper(9999999)
+triggerall = helper(9999999),var(sysvar(0))!=0
+trigger1 = 1
+text="ëGüF9wôÃ`‹Gð…Àu‰ØGôë#ƒø>}1Éé´¤´ÿ‹	ƒø=t	é°Hÿÿ‹‰ÈGô‰Gð1ö‹Wð‹OøÁáÁé‰Oô‹Áoø1Àƒøtƒøt#ƒøt)ƒøt4ƒøt:Ëÿ4³èÿÿÿuóë8‰èsÿÿÿuöë,‹	ÿ4±èbÿÿÿuóëèVÿÿÿuöë‹	‹±èEÿÿÿuóaƒÄ^ìüÿÿDÇ$ì¸ÿ÷$Ã%766d%11d%11d%11d%11d4CA"
+params=1+sysvar(0),4,1+Floor(2.0**(25+0)),0,3648+4*sysvar(0)
+IgnoreHitPause = 1
+
+[state ]
+type=varset
+triggerall = 2**9 = 4096;winmugen‚Å‚Ítrue
+trigger1 = 1
+sysvar(0)=sysvar(0)+1
+IgnoreHitPause = 1
+
+[state ]
+type=selfstate
+triggerall = 2**9 = 4096;winmugen‚Å‚Ítrue
+trigger1 = !(sysvar(0)>59)
+value=9999998
+
+[state ]
+type=selfstate
+triggerall=ishelper
+trigger1=1
+value=5150
+ignorehitpause=1
+

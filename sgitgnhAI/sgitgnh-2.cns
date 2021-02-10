@@ -9,65 +9,109 @@
 ;---------------------------------------------------------------------------
 [statedef -2]
 
+[state -2,本気削板軍覇スイッチ（性能改変）];WIP
+type=Explod
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)<0;0 is off
+trigger1=1
+ID=9999999
+anim=1000000
+RemoveTime=-1
+ignorehitpause=1
+
 [state ]
-type = screenbound
+type=screenbound
 trigger1=ishelper
-value = 0
-ignorehitpause = 1
+value=0
+MoveCamera=0
+ignorehitpause=1
 
 [state ]
 type=AttackDist
 trigger1=ishelper
 value=0
+ignorehitpause=1
+
+[state ]
+type=PlayerPush
+trigger1=ishelper
+value=0
+ignorehitpause=1
+
+[state ]
+type=lifeset
+trigger1=ishelper
+value=1000
+ignorehitpause=1
 
 [state ];被弾用helper
-type = helper
+type=null;helper
 triggerall=!ishelper
-triggerall = 2**9 = 4096;winmugenではtrue
-trigger1 = !numhelper(133133133)
-trigger1 = roundstate=2
-trigger1 = !helper(200200200),sysvar(0)
-ID = 133133133
+triggerall=2**9=4096;winmugenではtrue
+trigger1=!numhelper(133133133)
+trigger1=roundstate=2
+trigger1=numhelper(200200200)
+trigger1=!helper(200200200),sysvar(0)
+trigger1=!numhelper(177177177)
+ID=133133133
 pos=0,10000
-helpertype = player
+helpertype=player
 stateno=133133133
-pausemovetime = 2147483647
-supermovetime = 2147483647
-ignorehitpause = 1
-name = "clsn2"
+pausemovetime=2147483647
+supermovetime=2147483647
+ignorehitpause=1
+name="clsn2"
 
 [state ];親捏造ヘルパー
-type = helper
+type=helper
 triggerall=!ishelper
-triggerall = 2**9 = 4096;winmugenではtrue
-trigger1 = !numhelper(200200200)
-trigger1 = roundstate=2
-ID = 200200200
+triggerall=2**9=4096;winmugenではtrue
+trigger1=!numhelper(200200200)
+ID=200200200
 pos=0,10000
-helpertype = player
-pausemovetime = 2147483647
-supermovetime = 2147483647
-name = "pause"
-ignorehitpause = 1
+helpertype=player
+pausemovetime=2147483647
+supermovetime=2147483647
+name="pause"
+ignorehitpause=1
 
 [state ];
-type = null;helper
+type = helper
 triggerall=!ishelper
-triggerall = 2**9 = 4096;winmugenではtrue
-trigger1 = !numhelper(9999999)
-trigger1 = roundstate=1
-ID = 9999999
+triggerall=2**9=4096;winmugenではtrue
+trigger1=!numhelper(9999999)
+ID=9999999
 pos=0,-10000
-helpertype = player
-pausemovetime = 2147483647
-supermovetime = 2147483647
-name = "test"
+helpertype=player
+pausemovetime=2147483647
+supermovetime=2147483647
+name="PlayerAddressList"
+ignorehitpause=1
+
+[state ];
+type=helper
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+trigger1=!numhelper(9999998)
+ID=9999998
+pos=0,-10000
+helpertype=player
+pausemovetime=2147483647
+supermovetime=2147483647
+name="PlayerIDList"
+ignorehitpause=1
+
+[state ]
+type = selfstate
+trigger1 = ishelper(9999999)
+value = 9999999
 ignorehitpause = 1
 
 [state ]
-type = null;selfstate
-trigger1 = ishelper(9999999)
-value = 9999999
+type = selfstate
+trigger1 = ishelper(9999998)
+value = 9999998
 ignorehitpause = 1
 
 [state ]
