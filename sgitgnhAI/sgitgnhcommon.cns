@@ -211,7 +211,25 @@ x=const(velocity.walk.fwd.x);’è”‚Åİ’è‚µ‚½‘¬“x
 [state 21,’â~]
 type=changestate
 triggerall=var(59)
+triggerall=2**9!=4096||!numhelper(200200200)
 trigger1=inguarddist&&!var(2)
+trigger2=roundstate!=2
+trigger3=p2bodydist x-enemy(var(0)),vel x*4*var(55)<35
+trigger3=p2movetype=h&&var(55)!=0
+trigger4=p2bodydist x<=55
+trigger4=var(55)=0&&p2movetype=h
+trigger5=enemy(var(0)),ctrl=1
+trigger5=p2bodydist x-enemy(var(0)),vel x*2*var(55)<=35
+trigger6=p2movetype!=h
+trigger6=!inguarddist
+trigger6=p2bodydist x<=32+28*(enemy(var(0)),hitdefattr=sca,aa,at,ap)
+value=0
+ctrl=1
+[state 21,’â~]
+type=changestate
+triggerall=var(59)
+triggerall=2**9=4096&&numhelper(200200200)
+trigger1=0;inguarddist&&!var(2)
 trigger2=roundstate!=2
 trigger3=p2bodydist x-enemy(var(0)),vel x*4*var(55)<35
 trigger3=p2movetype=h&&var(55)!=0

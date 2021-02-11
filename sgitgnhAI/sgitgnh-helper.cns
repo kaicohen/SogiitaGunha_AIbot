@@ -1822,19 +1822,30 @@ var(11)=999
 type=varset
 triggerall=var(2)=0
 trigger1=ishelper(21000)
-trigger1=enemy(root,var(0)),numhelper>0
-trigger1=roundstate<=1||(enemy(root,var(0)),movetype=h&&enemy(root,var(0)),stateno!=[120,159])
-var(2)=(enemy(root,var(0)),numhelper-numenemy)+1
+;trigger1=enemy(0),numproj>0
+trigger1=roundstate<=1||(enemy(0),movetype=h&&enemy(0),stateno!=[120,159])
+var(2)=(enemy(0),numproj)+1
 [state 21000]
 type=varset
-triggerall=var(2)>enemy(root,var(0)),numhelper
+triggerall=var(2)>enemy(0),numproj
 trigger1=ishelper(21000)
 trigger1=roundstate=2
-var(2)=(enemy(root,var(0)),numhelper-numenemy)+1
+var(2)=(enemy(0),numproj)+1
 [state 21000]
 type=varset
+triggerall=numenemy>1
+triggerall=var(3)=0
 trigger1=ishelper(21000)
-var(3)=(root,sysvar(3)+3156)*(root,movetype!=h)+gametime*(root,movetype=h)
+;trigger1=enemy(1),numproj>0
+trigger1=roundstate<=1||(enemy(1),movetype=h&&enemy(1),stateno!=[120,159])
+var(3)=(enemy(1),numproj)+1
+[state 21000]
+type=varset
+triggerall=numenemy>1
+triggerall=var(3)>enemy(1),numproj
+trigger1=ishelper(21000)
+trigger1=roundstate=2
+var(3)=(enemy(1),numproj)+1
 [state ]
 type=varset
 trigger1=ishelper(21000)

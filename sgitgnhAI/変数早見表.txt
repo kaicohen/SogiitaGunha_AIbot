@@ -59,7 +59,7 @@
  Var(48) = AI技振り制御補助
  Var(49) = AI空中ジャンプ制限
 
- Var(50) = 時止察知
+ Var(50) = 
  Var(51) = 敵helper x距離
  Var(52) = 敵helper y距離
  Var(53) = すごパキャンセル経由用

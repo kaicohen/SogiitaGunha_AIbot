@@ -1051,28 +1051,6 @@ trigger3=roundstate!=2
 trigger4=!playeridexist(helper(30000),sysvar(4))
 var(52)=0
 ignorehitpause=1
-[state ]
-type=varset
-triggerall=!ishelper
-triggerall=var(59)
-triggerall=numhelper(21000)
-triggerall=var(50)!=0
-trigger1=p2movetype!=a
-trigger2=roundstate!=2
-trigger3=movetype=h
-trigger4=p2stateno!=var(50)
-var(50)=0
-ignorehitpause=1
-[state ]
-type=varset
-triggerall=!ishelper
-triggerall=var(59)
-triggerall=numhelper(21000)
-triggerall=gametime>helper(21000),var(3)+14
-triggerall=var(50)=0
-trigger1=p2movetype=a
-var(50)=p2stateno
-ignorehitpause=1
 [state ];roundstate<2で何かキー入力が入った＞＞mugenのバグでその後の入力が1f認識されないためAI暴発の原因となる……らしい
 type=varset
 triggerall=!ishelper
