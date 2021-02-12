@@ -385,12 +385,19 @@ MoveCamera=0
 ignorehitpause = 1
 
 --------
-[state ]
+[state ];root‚ÌƒŠƒXƒg’†‚ÌˆÊ’u’Tõ
 type=varset
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
 triggerall=helper(9999999),var(root,teamside-1)!=0
-trigger1=root,ID=helper(9999998),var(root,teamside-1)
+triggerall=1||var(1):=0
+trigger1=0||root,ID=helper(9999998),var(var(1))
+trigger2=1||var(1):=var(1)+1
+trigger2=0||root,ID=helper(9999998),var(var(1))
+trigger3=1||var(1):=var(1)+1
+trigger3=0||root,ID=helper(9999998),var(var(1))
+trigger4=1||var(1):=var(1)+1
+trigger4=0||root,ID=helper(9999998),var(var(1))
 sysvar(0)=99
 ignorehitpause=1
 
@@ -531,7 +538,7 @@ ignorehitpause=1
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=ID=helper(9999998),var(var(0))
 text = "%.*d%n%d"
 params = ((helper(9999999),var(var(0)))&255), 0, helper(9999999),var(var(0))+100
 ignorehitpause = 1
@@ -539,7 +546,7 @@ ignorehitpause = 1
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=ID=helper(9999998),var(var(0))
 text = "%.*d%n%d"
 params = ((helper(9999999),var(var(0)))&255*256)/256, 0, helper(9999999),var(var(0))+101
 ignorehitpause = 1
@@ -547,7 +554,7 @@ ignorehitpause = 1
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=ID=helper(9999998),var(var(0))
 text = "%.*d%n%d"
 params = ((helper(9999999),var(var(0)))&255*256*256)/(256*256), 0, helper(9999999),var(var(0))+102
 ignorehitpause = 1
@@ -555,46 +562,47 @@ ignorehitpause = 1
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=ID=helper(9999998),var(var(0))
 text = "%.*d%n%d"
 params = (((helper(9999999),var(var(0)))<0)*128+(helper(9999999),var(var(0)))&127*256*256*256)/(256*256*256), 0, helper(9999999),var(var(0))+103
+ignorehitpause = 1
 
 ;root
 [State , ‘ã“ü‰º1Œ…]
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = sysvar(0)=99
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=sysvar(0)=99
+trigger1=root,ID=helper(9999998),var(var(1))
 text = "%.*d%n%d"
-params = ((helper(9999999),var(root,teamside-1)-1)&255), 0, const(data.airjuggle)+5060
+params = ((helper(9999999),var(var(1))-1)&255), 0, const(data.airjuggle)+5060
 ignorehitpause = 1
 [State , ‘ã“ü‰º2Œ…]
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = sysvar(0)=99
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=sysvar(0)=99
+trigger1=root,ID=helper(9999998),var(var(1))
 text = "%.*d%n%d"
-params = ((helper(9999999),var(root,teamside-1)-1)&255*256)/256, 0, const(data.airjuggle)+5061
+params = ((helper(9999999),var(var(1))-1)&255*256)/256, 0, const(data.airjuggle)+5061
 ignorehitpause = 1
 [State , ‘ã“ü‰º3Œ…]
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = sysvar(0)=99
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=sysvar(0)=99
+trigger1=root,ID=helper(9999998),var(var(1))
 text = "%.*d%n%d"
-params = ((helper(9999999),var(root,teamside-1)-1)&255*256*256)/(256*256), 0, const(data.airjuggle)+5062
+params = ((helper(9999999),var(var(1))-1)&255*256*256)/(256*256), 0, const(data.airjuggle)+5062
 ignorehitpause = 1
 [State , ‘ã“ü‰º4Œ…]
 type = DisplayToClipBoard
 triggerall=numhelper(9999999)
 triggerall=numhelper(9999998)
-trigger1 = sysvar(0)=99
-trigger1 = ID=helper(9999998),var(var(0))
+trigger1=sysvar(0)=99
+trigger1=root,ID=helper(9999998),var(var(1))
 text = "%.*d%n%d"
-params = (((helper(9999999),var(root,teamside-1)-1)<0)*128+(helper(9999999),var(root,teamside-1)-1)&127*256*256*256)/(256*256*256), 0, const(data.airjuggle)+5063
+params = (((helper(9999999),var(var(1))-1)<0)*128+(helper(9999999),var(var(1))-1)&127*256*256*256)/(256*256*256), 0, const(data.airjuggle)+5063
 ignorehitpause = 1
 
 --------
