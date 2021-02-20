@@ -704,12 +704,10 @@ ctrl=1
 type=changestate
 triggerall=var(59)
 triggerall=var(2)=0||(var(2)>0&&(p2bodydist x<50||var(40)<5&&inguarddist))
-trigger1=0
-trigger1=0
+trigger1=time<10
+trigger1=inguarddist
 trigger2=inguarddist||p2movetype=a||(p2bodydist x-enemy(var(0)),vel x*var(55)*7-vel x*7<120-80*(p2movetype=h))||((p2bodydist x-enemy(var(0)),vel x*var(55)*7-vel x*7<195)&&(p2movetype=i||enemy(var(0)),animtime>-4-4*(time>8)))
 trigger2=!numtarget(2600)&&!numtarget(2620)&&var(2)=0
-trigger2=(p2stateno!=[100,101])
-trigger3=(p2stateno!=[100,101])
 trigger3=inguarddist||p2movetype=a||(p2bodydist x-enemy(var(0)),vel x*var(55)*7-vel x*5<40)
 trigger3=numtarget(2600)||numtarget(2620)||var(2)
 trigger4=var(59)

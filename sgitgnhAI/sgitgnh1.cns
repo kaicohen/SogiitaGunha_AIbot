@@ -6033,7 +6033,7 @@ sparkno=-1
 parkxy=0,0
 hitsound=s1,6
 numhits=0
-p1stateno=1256
+p1stateno=1320;1256
 supermovetime=999999999999999999999999999999999999999
 pausemovetime=999999999999999999999999999999999999999
 ignorehitpause=1
@@ -6044,7 +6044,7 @@ trigger1=anim=30
 trigger1=animelemtime(10)>=0
 slot=0
 attr=sca,aa,ap
-stateno=1256
+stateno=1320;1256
 supermovetime=999999999999999999999999999999999999999
 pausemovetime=999999999999999999999999999999999999999
 ignorehitpause=1

@@ -138,6 +138,102 @@ trigger1 = ishelper(200200200)
 value = 200200200
 ignorehitpause = 1
 
+;--------------
+[state -2,本気];WIP
+type=explod
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=numexplod(5)=0
+triggerall=var(40)>0
+triggerall=alive!=0
+triggerall=life>0
+triggerall=(enemy,life>0&&enemy(numenemy>1),life>0)&&(enemy,alive=1&&enemy(numenemy>1),alive=1)
+trigger1=1||var(2):=10
+anim=4
+id=5
+postype=p1
+pos=0,0
+facing=1
+vfacing=1
+scale=const(size.xscale),const(size.yscale)
+bindtime=-1
+removetime=-1
+sprpriority=7
+ontop=1
+shadow=0,0,0
+trans=add;Add ,None, Add1, Sub, AddAlpha
+ownpal=1
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+persistent=1
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=varset
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=alive!=0
+triggerall=life>0
+trigger1=1
+var(40)=10
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=varset
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=alive!=0
+triggerall=life>0
+trigger1=1
+fvar(0)=(50)
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=nothitby
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=alive!=0
+triggerall=life>0
+trigger1=1
+value=sca
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=lifeset
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=!numhelper(7)
+trigger1=1
+value=1000
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=lifeset
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=numhelper(7)
+triggerall=numhelper(200200200)
+trigger1=helper(200200200),sysvar(3)>0
+value=1000-helper(200200200),sysvar(3)*7
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=selfstate
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=sysvar(3)!=gametime-3156
+trigger1=1
+value=1320
+ignorehitpause=1
+
 ;===========================================================================
 ;設定用変数セット記述
 ;===========================================================================
@@ -185,6 +281,7 @@ var(1)=(0);( )内の数値を1か0で設定する
 type=helper
 triggerall=!ishelper
 trigger1=numhelper(7)=0
+trigger1=roundstate<4
 helpertype=normal
 name="Number-seven"
 id=7
@@ -927,7 +1024,7 @@ triggerall=var(2)!=0
 triggerall=roundstate<3
 trigger1=(stateno>=5000)
 trigger2=(stateno<5000)&&(movetype=h)
-value=1256
+value=1320;1256
 ignorehitpause	=1
 ;-----------------------------------
 [state -2,クリップボード]

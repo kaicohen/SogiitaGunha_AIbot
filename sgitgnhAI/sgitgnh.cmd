@@ -1654,6 +1654,7 @@ triggerall=var(59)=0;šAIƒXƒCƒbƒ`
 triggerall=(command="‹t”g“®")
 triggerall=(command="x")
 triggerall=(fvar(0)>0)
+triggerall=!NumExplod(9999999)
 trigger1=ctrl
 trigger2=(stateno=200)||(stateno=400)||(stateno=600)
 trigger2=(animelemtime(5)>0)
@@ -2906,6 +2907,7 @@ triggerall=p2statetype!=l
 triggerall=(enemy(var(0)),time<4&&p2movetype=a&&(var(42)=[2,9]))||p2movetype!=a
 triggerall=var(58)!=5
 triggerall=enemy(var(0)),prevstateno!=5120&&helper(21000),var(10)<=0
+triggerall=!NumExplod(9999999)
 trigger1=ctrl||stateno=100||(stateno=52&&animtime=0)
 trigger1=(enemy(var(0)),ctrl&&(!inguarddist&&random<10))||enemy(var(0)),movetype=a
 trigger1=1;!inguarddist
@@ -2955,6 +2957,7 @@ triggerall=var(58)!=5
 triggerall=enemy(var(0)),prevstateno!=5120&&helper(21000),var(10)<=0
 triggerall=numhelper(30000)
 triggerall=helper(30000),sysvar(3)!=[2,3]
+triggerall=!NumExplod(9999999)
 ;triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=0&&random<700||helper(30000),sysvar(3)=1||helper(30000),sysvar(3)=4&&random<700||enemy(var(0)),hitdefattr=sca,ap
 ;triggerall=enemy(var(0)),numproj>=1||helper(30000),sysvar(3)=1||helper(30000),sysvar(4)=0&&(enemy(var(0)),numhelper>helper(21000),var(2))
 triggerall=helper(30000),sysvar(3)=0&&random<700||helper(30000),sysvar(3)=1||helper(30000),sysvar(3)=4&&random<700||enemy(var(0)),hitdefattr=sca,ap
@@ -2991,6 +2994,7 @@ triggerall=var(58)!=5
 triggerall=p2movetype!=h
 triggerall=gametime%3<2
 triggerall=enemy(var(0)),prevstateno!=5120&&helper(21000),var(10)<=0
+triggerall=!NumExplod(9999999)
 trigger1=ctrl||(stateno=52&&animtime=0)
 trigger1=random<var(59)*50+100
 trigger1=statetype=a||p2movetype=a&&p2stateno<=800
@@ -5166,6 +5170,7 @@ triggerall=statetype!=l
 triggerall=movetype!=h
 triggerall=movetype!=a
 triggerall=!(inguarddist||p2movetype=a||(p2bodydist x-enemy(var(0)),vel x*var(55)*7-vel x*7<120-80*(p2movetype=h)))
+triggerall=ctrl&&stateno!=[100,101]
 trigger1=p2statetype!=l
 trigger1=ctrl
 trigger1=stateno!=100&&prevstateno!=[100,101]
@@ -5816,6 +5821,7 @@ triggerall=ctrl||stateno=100&&time<10||(stateno=52&&animtime=0)
 triggerall=!inguarddist
 triggerall=prevstateno!=[1400,1445]
 triggerall=enemy(var(0)),prevstateno!=5120&&helper(21000),var(10)<=0
+triggerall=!NumExplod(9999999)
 trigger1=p2stateno=52
 trigger1=enemy(var(0)),animtime<-1
 trigger2=p2statetype=a

@@ -637,6 +637,37 @@ var(21)=const(data.airjuggle)
 
 ;-----
 
+;–{‹Cí”ÂŒR”e
+[state ]
+type=varset
+trigger1=sysvar(0)
+trigger1=roundstate=2
+trigger1=root,NumExplod(9999999)
+trigger1=numhelper(7)
+trigger1=helper(7),NumExplod(7)
+trigger2=sysvar(2)=0
+sysvar(2)=300
+ignorehitpause=1
+
+[state ]
+type=varadd
+trigger1=sysvar(0)
+trigger1=roundstate=2
+trigger1=root,NumExplod(9999999)
+trigger1=numhelper(7)
+trigger1=sysvar(2)>0
+sysvar(2)=-1
+ignorehitpause=1
+
+[state ]
+type=varadd
+trigger1=sysvar(0)
+trigger1=roundstate=2
+trigger1=root,NumExplod(9999999)
+trigger1=sysvar(2)=270
+sysvar(3)=1
+ignorehitpause=1
+
 ;-----‚±‚±‚É‘‚­
 ;var(20)‚É1,test—p
 [state ]
@@ -657,6 +688,34 @@ trigger1 = root,stateno != [120,156]
 trigger1 = root,NumExplod(9999999)
 text = "%.*d%n%d"
 params = 1, 0, (palno)+3600
+ignorehitpause = 1
+
+;–{‘Ì“€Œ‹‰ðœ
+[state ]
+type = DisplayToClipBoard
+trigger1 = sysvar(0)
+trigger1 = root,hitpausetime
+trigger1 = root,stateno != [120,156]
+trigger1 = root,NumExplod(9999999)
+text = "%.*d%n%d"
+params = 0, 0,(palno)+3608
+ignorehitpause = 1
+
+[State , pausemovetime•t—^]
+type = DisplayToClipBoard
+trigger1 = sysvar(0)=99
+trigger1 = root,ID=helper(9999998),var(var(1))
+trigger1 = palno!=[0,12]
+text = "%.*d%n%d"
+params = 255, 0, (palno) + 476
+ignorehitpause = 1
+[State , supermovetime•t—^]
+type = DisplayToClipBoard
+trigger1 = sysvar(0)=99
+trigger1 = root,ID=helper(9999998),var(var(1))
+trigger1 = palno!=[0,12]
+text = "%.*d%n%d"
+params = 255, 0, (palno) + 480
 ignorehitpause = 1
 
 ;ƒK[ƒhƒXƒe[ƒgì¬
@@ -722,6 +781,18 @@ text = "%.*d%n%d"
 params = 1, 0, (palno)+3600
 ignorehitpause=1
 
+[state ]
+type=varset
+trigger1=1
+var(40)=0
+ignorehitpause=1
+
+[state ]
+type=varset
+trigger1=root,stateno=[120,159]
+var(40)=1
+ignorehitpause=1
+
 [state -1,ƒK[ƒh]
 type=varset
 triggerall=sysvar(0)
@@ -744,7 +815,7 @@ trigger4=root,prevstateno=[5000,5270]
 trigger5=helper(30000),sysvar(4)!=0&&(root,var(51)=[-85,85])&&(root,var(52)=[-100,70])
 trigger6=numhelper(21000)
 trigger6=helper(21000),var(4)&&helper(21000),var(1)
-sysvar(1)=1
+sysvar(1)=1+(var(40):=1)*0
 ignorehitpause = 1
 
 [state -1,“ËiŒn‘ÎôƒK[ƒh]
@@ -761,7 +832,7 @@ triggerall=!(enemy(root,var(0)),hitdefattr=sca,nt,st,ht)
 triggerall=root,var(2)=0
 trigger1=(playerid(helper(21000),var(58)),vel x>1)||(playerid(helper(21000),var(58)),vel y>3)
 trigger1=playerid(helper(21000),var(58)),hitdefattr=sc,aa
-sysvar(1)=1
+sysvar(1)=1+(var(40):=1)*0
 ignorehitpause=1
 
 [state -1,HitoLo(AI)]

@@ -2397,6 +2397,41 @@ triggerall=root,time>1||root,movetype=a
 trigger1=1
 var(40)=0
 ignorehitpause=1
+;winmugen
+[state ]
+type=varset
+triggerall=ishelper(21000)
+triggerall=numhelper(200200200)
+triggerall=helper(200200200),sysvar(0)!=0
+triggerall=helper(200200200),var(40)!=0
+triggerall=root,alive
+triggerall=root,statetype=c
+trigger1=1
+var(40)=1
+ignorehitpause=1
+[state ]
+type=varset
+triggerall=ishelper(21000)
+triggerall=numhelper(200200200)
+triggerall=helper(200200200),sysvar(0)!=0
+triggerall=helper(200200200),var(40)!=0
+triggerall=root,alive
+triggerall=root,statetype=s
+trigger1=1
+var(40)=2
+ignorehitpause=1
+[state ]
+type=varset
+triggerall=ishelper(21000)
+triggerall=numhelper(200200200)
+triggerall=helper(200200200),sysvar(0)!=0
+triggerall=helper(200200200),var(40)=0
+triggerall=root,alive
+triggerall=root,stateno!=[120,159]
+triggerall=root,time>1||root,movetype=a
+trigger1=1
+var(40)=0
+ignorehitpause=1
 ;---------------------------------------------------------------------------
 [state 30000,’†’iŠwK‚»‚Ì‚P]
 type=varset
@@ -2483,15 +2518,18 @@ type=varset
 var(41)=playerid(var(58)),stateno
 trigger1=ishelper(21000)
 trigger1=!root,movereversed&&root,movetype=a
+ignorehitpause=1
 [state 29990];‘Šè‚Ì‹Z‚ğƒŠƒZƒbƒg
 type=varset
 var(41)=0
 trigger1=ishelper(21000)
 trigger1=!root,movereversed&&root,movetype!=a
+ignorehitpause=1
 [state 29990];“–g‚Å‚ ‚é¨‹L‰¯
 type=varset
 var(42)=var(41)
 triggerall=!var(42)
+triggerall=var(41)>200
 trigger1=ishelper(21000)
 trigger1=root,movereversed
 ignorehitpause=1
@@ -2499,6 +2537,7 @@ ignorehitpause=1
 type=varset
 var(43)=var(41)
 triggerall=var(42)&&!var(43)
+triggerall=var(41)>200
 trigger1=var(42)!=var(41)
 trigger1=ishelper(21000)
 trigger1=root,movereversed
@@ -2507,6 +2546,7 @@ ignorehitpause=1
 type=varset
 var(44)=var(41)
 triggerall=var(42)&&var(43)&&!var(44)
+triggerall=var(41)>200
 trigger1=var(42)!=var(41)&&var(43)!=var(41)
 trigger1=ishelper(21000)
 trigger1=root,movereversed
@@ -2515,6 +2555,7 @@ ignorehitpause=1
 type=varset
 var(45)=var(41)
 triggerall=var(42)&&var(43)&&var(44)&&!var(45)
+triggerall=var(41)>200
 trigger1=var(42)!=var(41)&&var(43)!=var(41)&&var(44)!=var(41)
 trigger1=ishelper(21000)
 trigger1=root,movereversed
