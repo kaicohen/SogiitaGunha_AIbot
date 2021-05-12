@@ -645,8 +645,8 @@ trigger1=roundstate=2
 trigger1=root,NumExplod(9999999)
 trigger1=numhelper(7)
 trigger1=helper(7),NumExplod(7)
-trigger2=sysvar(2)=0
-sysvar(2)=300
+trigger1=sysvar(2)=0
+sysvar(2)=60
 ignorehitpause=1
 
 [state ]
@@ -655,6 +655,7 @@ trigger1=sysvar(0)
 trigger1=roundstate=2
 trigger1=root,NumExplod(9999999)
 trigger1=numhelper(7)
+trigger1=!helper(7),NumExplod(7)
 trigger1=sysvar(2)>0
 sysvar(2)=-1
 ignorehitpause=1
@@ -664,7 +665,7 @@ type=varadd
 trigger1=sysvar(0)
 trigger1=roundstate=2
 trigger1=root,NumExplod(9999999)
-trigger1=sysvar(2)=270
+trigger1=sysvar(2)=1
 sysvar(3)=1
 ignorehitpause=1
 
@@ -690,21 +691,12 @@ text = "%.*d%n%d"
 params = 1, 0, (palno)+3600
 ignorehitpause = 1
 
-;–{‘Ì“€Œ‹‰ğœ
-[state ]
-type = DisplayToClipBoard
-trigger1 = sysvar(0)
-trigger1 = root,hitpausetime
-trigger1 = root,stateno != [120,156]
-trigger1 = root,NumExplod(9999999)
-text = "%.*d%n%d"
-params = 0, 0,(palno)+3608
-ignorehitpause = 1
-
+;–{‘Ì
 [State , pausemovetime•t—^]
 type = DisplayToClipBoard
 trigger1 = sysvar(0)=99
 trigger1 = root,ID=helper(9999998),var(var(1))
+trigger1 = root,NumExplod(9999999)
 trigger1 = palno!=[0,12]
 text = "%.*d%n%d"
 params = 255, 0, (palno) + 476
@@ -713,6 +705,7 @@ ignorehitpause = 1
 type = DisplayToClipBoard
 trigger1 = sysvar(0)=99
 trigger1 = root,ID=helper(9999998),var(var(1))
+trigger1 = root,NumExplod(9999999)
 trigger1 = palno!=[0,12]
 text = "%.*d%n%d"
 params = 255, 0, (palno) + 480

@@ -21,6 +21,18 @@ RemoveTime=-1
 ignorehitpause=1
 
 [state ]
+type=Explod
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=!NumExplod(9999998)
+trigger1=ctrl
+ID=9999998
+anim=1000000
+RemoveTime=-1
+ignorehitpause=1
+
+[state ]
 type=screenbound
 trigger1=ishelper
 value=0
@@ -102,16 +114,17 @@ supermovetime=2147483647
 name="PlayerIDList"
 ignorehitpause=1
 
-[state ]
-type = selfstate
-trigger1 = ishelper(9999999)
-value = 9999999
-ignorehitpause = 1
+[state -2,codehelperMUTEKI]
+type=hitby
+triggerall=ishelper(9999999)||ishelper(9999998)
+trigger1=1
+value=sca
+ignorehitpause=1
 
 [state ]
 type = selfstate
-trigger1 = ishelper(9999998)
-value = 9999998
+trigger1 = ishelper(9999999)||ishelper(9999998)
+value = 9999999-1*(ishelper(9999998))
 ignorehitpause = 1
 
 [state ]
@@ -138,6 +151,11 @@ trigger1 = ishelper(200200200)
 value = 200200200
 ignorehitpause = 1
 
+[state ]
+type = selfstate
+trigger1 = ishelper(7)
+value = 7
+ignorehitpause = 1
 ;--------------
 [state -2,本気];WIP
 type=explod
@@ -149,6 +167,8 @@ triggerall=var(40)>0
 triggerall=alive!=0
 triggerall=life>0
 triggerall=(enemy,life>0&&enemy(numenemy>1),life>0)&&(enemy,alive=1&&enemy(numenemy>1),alive=1)
+triggerall=roundstate=2
+triggerall=NumExplod(9999998)
 trigger1=1||var(2):=10
 anim=4
 id=5
@@ -168,7 +188,6 @@ supermovetime=999999999999
 pausemovetime=999999999999
 ignorehitpause=1
 persistent=1
-ignorehitpause=1
 
 [state -2,本気];WIP
 type=varset
@@ -193,7 +212,7 @@ fvar(0)=(50)
 ignorehitpause=1
 
 [state -2,本気];WIP
-type=nothitby
+type=hitby
 triggerall=!ishelper
 triggerall=2**9=4096;winmugenではtrue
 triggerall=NumExplod(9999999)
@@ -209,6 +228,7 @@ triggerall=!ishelper
 triggerall=2**9=4096;winmugenではtrue
 triggerall=NumExplod(9999999)
 triggerall=!numhelper(7)
+triggerall=alive!=0
 trigger1=1
 value=1000
 ignorehitpause=1
@@ -221,17 +241,138 @@ triggerall=NumExplod(9999999)
 triggerall=numhelper(7)
 triggerall=numhelper(200200200)
 trigger1=helper(200200200),sysvar(3)>0
-value=1000-helper(200200200),sysvar(3)*7
+value=1000-helper(200200200),sysvar(3)*16+1000*((1000-helper(200200200),sysvar(3)*16)<=0)
 ignorehitpause=1
 
 [state -2,本気];WIP
-type=selfstate
+type=ctrlset
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)&&NumExplod(9999998)
+triggerall=roundstate=2
+trigger1=stateno=0||stateno=120
+trigger1=ctrl!=1
+value=1
+ignorehitpause=1
+
+[state -2,本気];WIP
+type=DisplayToClipBoard
 triggerall=!ishelper
 triggerall=2**9=4096;winmugenではtrue
 triggerall=NumExplod(9999999)
-triggerall=sysvar(3)!=gametime-3156
-trigger1=1
-value=1320
+triggerall=alive!=1
+triggerall=numhelper(200200200)
+triggerall=helper(200200200),sysvar(0)=99
+trigger1=numhelper(7)
+trigger1=helper(200200200),sysvar(3)
+trigger1=(1000-helper(200200200),sysvar(3)*16+1000*((1000-helper(200200200),sysvar(3)*16)<=0))>0
+trigger2=!numhelper(7)
+text = "%.*d%n%d"
+params = 1, 0, (helper(200200200),palno)+3620
+ignorehitpause=1
+
+;本体凍結解除
+[state ]
+type=DisplayToClipBoard
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=alive!=0
+triggerall=numhelper(7)
+triggerall=numhelper(200200200)
+triggerall=helper(200200200),sysvar(0)=99
+trigger1=hitpausetime
+text = "%.*d%n%d"
+params = 0, 0,(helper(200200200),palno)+3608
+ignorehitpause=1
+
+[state ];wip
+type=hitdef
+triggerall=NumExplod(9999999)
+trigger1=gametime%1800=[601,1799]
+trigger1=gametime%3=0
+attr=,ha
+damage=7,0
+Fall.Damage=210000
+getpower=10,0
+animtype=back
+pausetime=0,0
+guardflag=-1
+hitflag=maf
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=-1
+ground.type=l
+ground.slidetime=0
+ground.hittime=0
+ground.velocity=0
+air.velocity=0,0
+air.hittime=0
+yaccel=0.5
+numhits=0
+air.fall=1
+fall.recover=0
+forcestand=0
+id=1000100
+envshake.time=0
+envshake.freq=0
+envshake.ampl=0
+supermovetime=999999999999
+pausemovetime=999999999999
+ignorehitpause=1
+
+[state ];wip
+type=null;projectile
+triggerall=NumExplod(9999999)
+trigger1=gametime%1800=[0,600]
+trigger1=gametime%3=0
+attr=s,ha
+damage=5,0
+Fall.Damage=210000
+getpower=10,0
+animtype=back
+pausetime=0,0
+;-----------------------------------Projectile専用のパラメータ
+offset=0,0;飛び道具を発射する位置（Ｘ軸,Ｙ軸）
+velocity=0,0;飛び道具の移動速度（Ｘ軸,Ｙ軸）
+accel=0,0;飛び道具の加速度(float)（Ｘ軸,Ｙ軸）
+projid=1000100;飛び道具のＩＤナンバー（NumProjIDなどで判断）
+projanim=1000100;飛び道具のアニメ（アクションナンバー）
+projhitanim=-1;飛び道具がヒットした時のアニメ（アクションナンバー）
+projremanim=-1;飛び道具が消える時のアニメ（アクションナンバー）
+projscale=0.5,0.5;飛び道具の大きさ（Ｘ軸,Ｙ軸）※現在２倍
+projshadow=0,0,0;飛び道具の影の色合い（赤,緑,青）※現在影無し
+projhits=1;飛び道具のヒット数（２以上なら多段ヒットになる）
+projmisstime=1;飛び道具の連続でヒットしない間隔　※projhitsが２以上の時のみ
+projpriority=999999;飛び道具の攻撃優先度・相手のProjectileよりも高いと消しながら進む
+projremovetime=1;飛び道具の消えるまでの時間（フレーム）※-1なら当たるか画面外に出るまで消えない
+;-----------------------------------これ以外にまだまだある。docsフォルダ参照。
+guardflag=-1
+hitflag=maf
+priority=3
+sparkno=-1
+guard.sparkno=-1
+hitsound=-1
+guardsound=-1
+ground.type=l
+ground.slidetime=0
+ground.hittime=0
+ground.velocity=0
+air.velocity=0,0
+air.hittime=0
+yaccel=0.5
+numhits=0
+air.fall=1
+fall.recover=0
+forcestand=0
+id=1000100
+envshake.time=0
+envshake.freq=0
+envshake.ampl=0
+supermovetime=999999999999
+pausemovetime=999999999999
 ignorehitpause=1
 
 ;===========================================================================
@@ -280,9 +421,27 @@ var(1)=(0);( )内の数値を1か0で設定する
 [state -2,システム制御用ヘルパー発生]
 type=helper
 triggerall=!ishelper
+triggerall=!NumExplod(9999999)
 trigger1=numhelper(7)=0
 trigger1=roundstate<4
 helpertype=normal
+name="Number-seven"
+id=7
+pos=0,0
+postype=p1
+facing=1
+stateno=7
+keyctrl=0
+ownpal=1
+supermovetime=999999999999999999999999999999999999999999999
+pausemovetime=999999999999999999999999999999999999999999999
+[state -2,システム制御用ヘルパー発生]
+type=helper
+triggerall=!ishelper
+triggerall=NumExplod(9999999)
+trigger1=numhelper(7)=0
+trigger1=roundstate<4
+helpertype=player
 name="Number-seven"
 id=7
 pos=0,0
@@ -1024,7 +1183,7 @@ triggerall=var(2)!=0
 triggerall=roundstate<3
 trigger1=(stateno>=5000)
 trigger2=(stateno<5000)&&(movetype=h)
-value=1320;1256
+value=1320*(!NumExplod(9999999))+120*(NumExplod(9999999));1256
 ignorehitpause	=1
 ;-----------------------------------
 [state -2,クリップボード]
@@ -1218,6 +1377,7 @@ trigger1=!ishelper
 trigger1=playeridexist(id)
 trigger1=!numhelper(21000)
 trigger1=alive&&roundstate<=2
+trigger1=!NumExplod(9999999)
 helpertype=normal
 name="AICTRL"
 stateno=21000
@@ -1232,6 +1392,7 @@ type=helper
 triggerall=!ishelper
 triggerall=playeridexist(id)
 triggerall=!numhelper(30000)
+triggerall=!NumExplod(9999999)
 trigger1=alive&&roundstate<2&&var(59)=0||(roundstate=2&&sysvar(4)<=30&&var(59)=0)
 trigger2=alive&&roundstate<=2&&var(59)!=0
 helpertype=normal
@@ -1295,6 +1456,7 @@ triggerall=numenemy=1&&!numpartner
 triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
 triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
 triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+triggerall=NumExplod(9999999)<=0
 trigger1=stateno!=[4000,4050]
 trigger1=life=0
 trigger1=statetype=a
@@ -1324,6 +1486,7 @@ triggerall=statetype=a
 triggerall=sysvar(3)!=gametime-3156
 triggerall=stateno=5150
 triggerall=time
+triggerall=NumExplod(9999999)<=0
 trigger1=numpartner
 trigger1=partner,alive
 trigger2=numpartner
@@ -1352,6 +1515,7 @@ triggerall=statetype!=a
 triggerall=sysvar(3)!=gametime-3156
 triggerall=stateno=5150
 triggerall=time
+triggerall=NumExplod(9999999)<=0
 trigger1=numpartner
 trigger1=partner,alive
 trigger2=numpartner
@@ -1381,6 +1545,7 @@ triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*
 triggerall=sysvar(3)!=gametime-3156
 triggerall=stateno=5150
 triggerall=time
+triggerall=NumExplod(9999999)<=0
 trigger1=stateno!=[4000,4050]
 trigger1=life=0
 trigger1=statetype!=a
@@ -1390,6 +1555,18 @@ supermovetime=999999999999999999999999999999999999999
 pausemovetime=999999999999999999999999999999999999999
 ignorehitpause=1
 persistent=1
+
+;-----------------
+[state -2,本気];WIP
+type=selfstate
+triggerall=!ishelper
+triggerall=2**9=4096;winmugenではtrue
+triggerall=NumExplod(9999999)
+triggerall=sysvar(3)!=gametime-3156
+trigger1=1
+value=120
+ignorehitpause=1
+ctrl=1
 ;===========================================================================
 ; 準常時監視ステート（－３）
 ;===========================================================================
@@ -1459,6 +1636,7 @@ triggerall=numenemy=1&&!numpartner
 triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
 triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
 triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+triggerall=NumExplod(9999999)<=0
 trigger1=stateno!=[4000,4050]
 trigger1=life=0
 trigger1=statetype=a
@@ -1482,6 +1660,7 @@ triggerall=numtarget=0
 triggerall=stateno!=[4000,4050]
 triggerall=life=0
 triggerall=statetype=a
+triggerall=NumExplod(9999999)<=0
 trigger1=numpartner
 trigger1=partner,alive
 trigger2=numpartner
@@ -1508,6 +1687,7 @@ triggerall=numenemy=1&&!numpartner
 triggerall=(enemy,alive&&numenemy=1)||(numenemy>1&&(enemy,alive||enemy(numenemy>1),alive))
 triggerall=((var(40)*5.0/100.0)>=((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax)))||var(43)>0
 triggerall=var(43)>0||(var(44)=0&&var(43)=0)||((var(40)*5.0/100.0)-((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))>0.3)||((enemy,life*0.5/enemy,lifemax)+(enemy(numenemy>1),life*0.5/enemy(numenemy>1),lifemax))<0.07
+triggerall=NumExplod(9999999)<=0
 trigger1=stateno!=[4000,4050]
 trigger1=life=0
 trigger1=statetype!=a
@@ -1527,6 +1707,7 @@ triggerall=roundstate=2
 triggerall=stateno!=[4000,4050]
 triggerall=life=0
 triggerall=statetype!=a
+triggerall=NumExplod(9999999)<=0
 trigger1=numpartner
 trigger1=partner,alive
 trigger2=numpartner

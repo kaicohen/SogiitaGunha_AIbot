@@ -852,6 +852,11 @@ triggerall=root,var(2)>0
 triggerall=(root,movetype=a)||(root,movetype=i)
 triggerall=root,var(40)>0
 trigger1=time=0
+trigger1=root,NumExplod(9999999)<=0
+trigger2=root,NumExplod(9999999)
+trigger2=numtarget
+trigger2=numhelper(200200200)
+trigger2=helper(200200200),sysvar(2)=0
 var(40)=-1
 supermovetime=999999999999
 pausemovetime=999999999999
@@ -864,6 +869,11 @@ triggerall=root,stateno!=[900,950]
 triggerall=root,var(2)>0
 triggerall=(root,movetype=a)||(root,movetype=i)
 trigger1=time=0
+trigger1=root,NumExplod(9999999)<=0
+trigger2=root,NumExplod(9999999)
+trigger2=numtarget
+trigger2=numhelper(200200200)
+trigger2=helper(200200200),sysvar(2)=0
 anim=510
 id=3600
 postype=left
@@ -890,6 +900,11 @@ triggerall=root,stateno!=[900,950]
 triggerall=root,var(2)>0
 triggerall=(root,movetype=a)||(root,movetype=i)
 trigger1=time=0
+trigger1=root,NumExplod(9999999)<=0
+trigger2=root,NumExplod(9999999)
+trigger2=numtarget
+trigger2=numhelper(200200200)
+trigger2=helper(200200200),sysvar(2)=0
 anim=510
 id=3600
 postype=right
@@ -922,6 +937,11 @@ triggerall=root,stateno!=[900,950]
 triggerall=anim=8
 triggerall=(root,movetype=a)||(root,movetype=i)
 trigger1=time=0
+trigger1=root,NumExplod(9999999)<=0
+trigger2=root,NumExplod(9999999)
+trigger2=numtarget
+trigger2=numhelper(200200200)
+trigger2=helper(200200200),sysvar(2)=0
 anim=9
 id=7
 postype=p1
@@ -946,6 +966,11 @@ triggerall=root,stateno!=[900,950]
 triggerall=anim=8
 triggerall=(root,movetype=a)||(root,movetype=i)
 trigger1=time=0
+trigger1=root,NumExplod(9999999)<=0
+trigger2=root,NumExplod(9999999)
+trigger2=numtarget
+trigger2=numhelper(200200200)
+trigger2=helper(200200200),sysvar(2)=0
 channel=4
 value=4,3
 persistent=0
@@ -970,9 +995,16 @@ supermovetime=999999999999
 pausemovetime=999999999999
 ignorehitpause	=1
 persistent=1
+[state a, a]
+type=TargetDrop
+trigger1=root,NumExplod(9999999)
+trigger1=numtarget
+excludeID=-1
+keepone=1
 [state 1000,]
 type=reversaldef
 trigger1=time>=15
+trigger1=!root,NumExplod(9999999)
 reversal.attr=sca,aa,at
 pausetime=0,15
 sparkno=-1
@@ -981,6 +1013,18 @@ hitsound=5,3
 numhits=0
 p1stateno=7
 persistent=1
+[state 1000,]
+type=reversaldef
+trigger1=root,NumExplod(9999999)
+reversal.attr=sca,aa
+pausetime=0,15
+sparkno=-1
+parkxy=0,0
+hitsound=-1
+numhits=0
+p1stateno=7
+persistent=1
+ignorehitpause=1
 [state 7シールド用変数カウントダウン]
 type=parentvaradd
 triggerall=root,stateno!=[900,950]
